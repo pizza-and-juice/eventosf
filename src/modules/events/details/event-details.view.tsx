@@ -1,26 +1,23 @@
 // third party
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
 
 // components
 import ProjectMainDetailsSkeleton from '@components/skeletons/project/main-details/project-main-details.skeleton';
 import Button from '@components/internal/button/button.component';
 
+// local components
+import Sidebar from './components/ed-sidebar';
+import MetadataSidebar from './components/ed-metadata-sidebar';
+import { EventDetailsPageCtx } from './events-details.context';
+
 // skeletons
 import DetailsMetadataSkeleton from '@modules/skeletons/events-details/metadata-skeleton';
-
-import { EventDetailsPageCtx } from './events-details.context';
 
 // services
 import UserSvcContext from '@shared/services/user/user.context';
 
-// static
-import ROUTES from '@static/router.data';
-
-import Sidebar from './components/sidebar';
-import MetadataSidebar from './components/metadata-sidebar';
-
-// import ShareProjectPanel from '@components/not-reusable/share-project/share-project.nr.component';
+// shared
+import dateToText from '@shared/utils/formatters';
 
 export default function EventsDetailsView() {
 	const userSvc = useContext(UserSvcContext);
@@ -38,9 +35,8 @@ export default function EventsDetailsView() {
 	}
 
 	return (
-		<div className="container-2 ">
+		<div className="container-2">
 			<div className="subcontainer">
-				{/* Sidebar */}
 				<div>
 					<Sidebar />
 				</div>
@@ -84,8 +80,15 @@ export default function EventsDetailsView() {
 												</HoverTooltip>
 											)} */}
 										</div>
+
+										<div>
+											<h2 className="text-xs text-agrey-700 dark:text-agrey-400 font-medium ">
+												{dateToText(event?.start_date)} -{' '}
+												{dateToText(event?.end_date)}
+											</h2>
+										</div>
 										<p className=" text-agrey-700 dark:text-agrey-400 whitespace-pre-line cursor-default">
-											{event?.description}
+											{event?.subtitle}
 										</p>
 										<div className="flex gap-x-4">
 											{/* {dappData.categories.map((categoryId, idx) => {
@@ -102,25 +105,21 @@ export default function EventsDetailsView() {
 													</div>
 												);
 											})} */}
-											{/* <button
-												className="px-2 py-1"
-												onClick={() => fn.changeTab(4)}
-											>
-												<h1 className="space-x-1 text-black dark:text-white">
-													<span>
-														<i className="fa-regular fa-message" />
-													</span>
-													<span className="text-sm">
-														{dappData.comments_count}
-													</span>
-												</h1>
-											</button> */}
+
+											<h1 className="space-x-1 text-black dark:text-white flex items-center">
+												<span>
+													<i className="fa-solid fa-users" />
+												</span>{' '}
+												<span className="text-sm">
+													{event?.attendees_list.length} Confirmaciones
+												</span>
+											</h1>
 										</div>
 									</div>
 								</section>
 							)}
 
-							{/* {eventsLoading
+							{eventsLoading
 								? null
 								: (userSvc.isAdmin() || 1) && (
 										<div className="block lg:hidden space-y-2">
@@ -139,7 +138,7 @@ export default function EventsDetailsView() {
 
 											<hr />
 										</div>
-								  )} */}
+								  )}
 
 							{/* project metadata mobile  */}
 							<section className="lg:hidden">

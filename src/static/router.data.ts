@@ -8,6 +8,7 @@ const ROUTES = {
 		root: '/events',
 		create: '/events/create',
 		details: '/events/:id',
+		edit: '/events/:id/edit',
 	},
 
 	// dashboard

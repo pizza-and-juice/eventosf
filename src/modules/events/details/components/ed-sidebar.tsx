@@ -1,7 +1,10 @@
 import { useContext } from 'react';
 import { EventDetailsPageCtx } from '../events-details.context';
+import UserSvcContext from '@shared/services/user/user.context';
 
 export default function Sidebar() {
+	const userSvc = useContext(UserSvcContext);
+
 	const {
 		state: { tabs, activeTab },
 		queries: { eventQuery },
@@ -21,18 +24,24 @@ export default function Sidebar() {
 						{event?.title || 'Evento'}
 					</h1>
 					<ul className="list-none ">
-						{tabs.map((tab, idx) => (
-							<li className="" key={idx}>
-								<button
-									onClick={tab.onClick}
-									className={`prj-aside-button ${
-										tab.id === activeTab && 'active'
-									}`}
-								>
-									{tab.label}
-								</button>
-							</li>
-						))}
+						{tabs.map((tab, idx) => {
+							if (tab.adminOnly && !userSvc.isAdmin()) {
+								return null;
+							}
+
+							return (
+								<li className="" key={idx}>
+									<button
+										onClick={tab.onClick}
+										className={`prj-aside-button ${
+											tab.id === activeTab && 'active'
+										}`}
+									>
+										{tab.label}
+									</button>
+								</li>
+							);
+						})}
 					</ul>
 				</section>
 			</div>

@@ -52,22 +52,6 @@ const ProfilePage = lazy(() => import('./(header-footer-layout)/profile/profile.
 const TestPage = lazy(() => import('./(header-footer-layout)/test/test.page'));
 const UiKitPage = lazy(() => import('./dev/ui-kit/ui-kit'));
 
-// modals
-const LoginModal = lazy(() => import('@modules/modals/auth/login.modal'));
-// const ContactModal = lazy(() => import('src/components/modals/contact/contact.modal'));
-// const ProjectImageModal = lazy(
-// 	() => import('src/components/modals/project-image/project-image.modal')
-// );
-// const DeleteCommentModal = lazy(
-// 	() => import('src/components/modals/delete-comment/delete-comment.modal')
-// );
-
-// const SessionExpiredModal = lazy(() => import('src/components/modals/login/session-expired.modal'));
-
-// const DeleteProjectModal = lazy(
-// 	() => import('src/components/modals/delete-project/delete-project.modal')
-// );
-
 function ScrollToTop() {
 	const { pathname } = useLocation();
 
@@ -135,7 +119,8 @@ function AppModals() {
 		[key: string]: any;
 	} = {
 		// [APP_MODALS.EXAMPLE_MODAL]: ExampleModal,
-		[APP_MODALS.LOGIN_MODAL]: LoginModal,
+		[APP_MODALS.LOGIN_MODAL]: lazy(() => import('@modules/modals/auth/login.modal')),
+		[APP_MODALS.CONTACT_MODAL]: lazy(() => import('@modules/modals/contact/contact.modal')),
 	};
 
 	const modalSvc = useContext(ModalSvcContext);

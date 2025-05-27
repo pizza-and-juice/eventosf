@@ -1,4 +1,4 @@
-import { ListEventsResponse } from '@modules/data-fetching/responses/networks.responses';
+import { ListEventsResponse } from '@modules/data-fetching/responses/events.responses';
 import { UseQueryResult } from '@tanstack/react-query';
 import { createContext } from 'react';
 

@@ -9,6 +9,8 @@ export type ListEventsResponse = {
 		image: string;
 
 		// location
+		country: string;
+		city: string;
 		address: string;
 		start_date: string;
 		end_date: string;
@@ -42,6 +44,8 @@ export type RetrieveEventResponse = {
 	image: string;
 
 	// location
+	country: string;
+	city: string;
 	address: string;
 	start_date: string;
 	end_date: string;

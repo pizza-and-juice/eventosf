@@ -6,7 +6,7 @@ import {
 	ListEventsResponse,
 	RetrieveEventResponse,
 	UpdateEventResponse,
-} from './responses/networks.responses';
+} from './responses/events.responses';
 import { CreateEventDto } from './dto/events.dto';
 
 import { faker } from '@faker-js/faker';
@@ -24,6 +24,8 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 			description: faker.lorem.paragraph(),
 			image: faker.image.urlPicsumPhotos(),
 
+			country: faker.location.country(),
+			city: faker.location.city(),
 			address: faker.location.streetAddress(),
 			start_date: faker.date.future().toString(),
 			end_date: faker.date.future().toString(),
@@ -58,6 +60,8 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 
 		website: Math.random() > 0.5 ? faker.internet.url() : undefined,
 
+		country: faker.location.country(),
+		city: faker.location.city(),
 		address: faker.location.streetAddress(),
 		start_date: faker.date.future().toString(),
 		end_date: faker.date.future().toString(),
@@ -94,6 +98,17 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 	};
 
 	mock.onPost(endpoints.events.create).reply(201, res_3);
+
+	// =====================================
+	// Delete Event Mock Response
+	// =====================================
+
+	const res_5: DeleteEventResponse = {
+		id: faker.string.uuid(),
+		message: 'Event deleted successfully',
+	};
+
+	mock.onDelete(/\/events\/([a-f0-9-]+)/).reply(200, res_5);
 }
 
 const eventsApi = {
@@ -135,7 +150,7 @@ const eventsApi = {
 	},
 
 	async delete(id: string): Promise<DeleteEventResponse> {
-		const res = await axios_<DeleteEventResponse>({
+		const res = await axios_m<DeleteEventResponse>({
 			method: 'DELETE',
 			url: endpoints.events.delete.replace(':id', id),
 		});

@@ -67,31 +67,51 @@ export default function AttendeesTab() {
 
 					<div>
 						{eventData?.attendees_list && eventData.attendees_list.length > 0 ? (
-							<ul className="list-none space-y-2">
+							<ul className="list-none space-y-1">
 								{eventData.attendees_list.map((attendee, idx) => (
-									<li key={idx} className="flex items-center gap-x-3">
-										<img
-											src={attendee.pfp}
-											alt=""
-											className="w-8 h-8 rounded-full hover:scale-105 hover:shadow-2xl transition duration-300 ease-in-out"
-											onError={() => {
-												attendee.pfp = '/default-user.png'; // Fallback image
-											}}
-										/>
-										<span className="text-black dark:text-white">
-											{attendee.name}
-										</span>
+									<li
+										key={idx}
+										className="  bg-gray-100 py-2 px-4 rounded-lg dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-300 ease-in-out "
+									>
+										<div className="flex justify-between items-center">
+											<div className="flex items-center gap-x-3">
+												<img
+													src={attendee.pfp}
+													alt=""
+													className="w-8 h-8 rounded-full hover:scale-105 hover:shadow-2xl transition duration-300 ease-in-out"
+													onError={() => {
+														attendee.pfp = '/default-user.png'; // Fallback image
+													}}
+												/>
+												<div>
+													<div className=" text-sm text-black dark:text-white">
+														{attendee.name}
+													</div>
+													<div className="text-xs text-gray-500 dark:text-gray-400">
+														{attendee.email}
+													</div>
+												</div>
+											</div>
+
+											<div>
+												{attendee.is_speaker && (
+													<div>
+														<span className="text-black dark:text-white">
+															<i className="fa-regular fa-microphone-stand" />
+														</span>
+														<span className="text-sm text-blue-500 ml-2">
+															Speaker
+														</span>
+													</div>
+												)}
+											</div>
+										</div>
 									</li>
 								))}
 							</ul>
 						) : (
-							<div className="text-gray-500">No attendees yet</div>
+							<div className="text-gray-500">Sin participantes aun</div>
 						)}
-					</div>
-
-					{/* Paragraphs */}
-					<div className="text-sm text-black dark:text-white">
-						<p className="whitespace-pre-line ">{eventData?.description}</p>
 					</div>
 				</div>
 			)}

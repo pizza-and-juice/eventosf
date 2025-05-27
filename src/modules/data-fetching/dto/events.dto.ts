@@ -6,6 +6,8 @@ export type CreateEventDto = {
 	image: File;
 
 	// location
+	country: string;
+	city: string;
 	address: string;
 	start_date: string;
 	end_date: string;

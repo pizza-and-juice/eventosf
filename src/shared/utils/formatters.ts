@@ -31,9 +31,10 @@ export function timeAgo(timestamp: number): string {
 	return 'just now';
 }
 
-export default function dateToText(timestamp: number) {
-	const formattedTimestamp = format(timestamp * 1000, 'MMM dd yyyy, hh:mm:ss a');
-	return formattedTimestamp;
+export default function dateToText(date: string | number): string {
+	const timestamp = typeof date === 'string' ? Date.parse(date) / 1000 : date;
+	// -> MMM dd yyyy
+	return format(new Date(timestamp * 1000), 'MMM dd yyyy');
 }
 
 export function shortenAddress(address: string, chars = 4): string {

@@ -35,9 +35,14 @@ export default function MetadataSidebar() {
 	const desktop = useMediaQuery('(min-width: 1024px)');
 
 	const {
+		state: { register, unregister, delete: deleteEvent, userRegistered },
 		queries: { eventQuery },
 		fn,
 	} = useContext(EventDetailsPageCtx);
+
+	const { registerError, registerLoading } = register;
+	const { unregisterError, unregisterLoading } = unregister;
+	const { deleteError, deleteLoading } = deleteEvent;
 
 	const { data } = eventQuery;
 
@@ -79,7 +84,25 @@ export default function MetadataSidebar() {
 							: ''
 					}
 				/> */}
-				<Button className="blue small">Registrarse</Button>
+				{userRegistered ? (
+					<Button
+						className={`red small  ${unregisterLoading && 'loading'}`}
+						onClick={fn.onUnregisterClick}
+					>
+						Desistir
+					</Button>
+				) : (
+					<Button
+						className={`blue small ${registerLoading && 'loading'}`}
+						onClick={fn.onRegisterClick}
+					>
+						Registrarse
+					</Button>
+				)}
+
+				{unregisterError && <div className="text-red-500 text-sm">{unregisterError}</div>}
+
+				{registerError && <div className="text-red-500 text-sm">{registerError}</div>}
 
 				{/* <Link
 					className=" flex gap-x-2 items-center"
@@ -95,7 +118,7 @@ export default function MetadataSidebar() {
 				{/* created by */}
 				<div className="space-y-2 min-w-[127px]">
 					<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium ">
-						Alfitrion
+						Anfitrión
 					</h2>
 					<div className="flex items-center gap-x-3">
 						<Link
@@ -119,33 +142,47 @@ export default function MetadataSidebar() {
 					</div>
 				</div>
 				{/* grant */}
-				{/* <div className="mb-4">
-									<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium">
-										Grant amount
-									</h2>
-									<h2 className="text-black dark:text-white font-medium">
-										${projectData.grantAmount} USD
-									</h2>
-								</div> */}
-				{/* Website Column */}
-				<div className="space-y-2">
-					<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium cursor-default">
-						Website
+				<div className="mb-4 space-y-2">
+					<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium">
+						Lugar
 					</h2>
-					<div>
-						{/* Website link */}
-						<Link
-							className="text-link flex gap-x-2 items-center"
-							to={'example.com'}
-							target="_blank"
-							rel="noreferrer noopener"
-						>
-							<span>
-								<i className="fa-solid fa-external-link hover:text-ablue-200 dark:text-agrey-400 transition duration-300 ease-in-out"></i>
-							</span>
-						</Link>
-					</div>
+					<h2 className="text-black dark:text-white font-medium">
+						{eventData.city}, {eventData.country} <br />
+						{eventData.address}
+					</h2>
 				</div>
+
+				<div className="mb-4 space-y-2">
+					<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium">
+						Aforo máximo
+					</h2>
+					<h2 className="text-black dark:text-white font-medium">
+						{eventData.attendees_capacity} personas
+					</h2>
+				</div>
+
+				{/* Website Column */}
+				{eventData.website && (
+					<div className="space-y-2">
+						<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium cursor-default">
+							Website
+						</h2>
+						<div>
+							{/* Website link */}
+							<Link
+								className="text-link flex gap-x-2 items-center"
+								to={eventData.website}
+								target="_blank"
+								rel="noreferrer noopener"
+							>
+								<span>
+									<i className="fa-solid fa-external-link hover:text-ablue-200 dark:text-agrey-400 transition duration-300 ease-in-out"></i>
+								</span>
+							</Link>
+						</div>
+					</div>
+				)}
+
 				{/* share */}
 				<div className="space-y-2">
 					<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium cursor-default">
@@ -181,57 +218,40 @@ export default function MetadataSidebar() {
 						)}
 					</div>
 				</div>
-				{/* Socials Column 
-				<div className="space-y-2">
-					<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium cursor-default">
-						Socials
-					</h2>
-					<div className="flex flex-row gap-x-1">
-						{Object.entries(dappData.socials).map(([key, url], idx) => {
-							const sm = socialsData.find((s) => s.id === key)!;
-
-							return (
-								<Link
-									className="text-link flex gap-x-2 items-center text-agrey-700 dark:text-agrey-400"
-									to={url}
-									target="_blank"
-									rel="noreferrer noopener"
-									key={idx}
-								>
-									<span>
-										<i
-											className={`fa-brands ${sm.logo} hover:text-ablue-200 transition duration-300 ease-in-out`}
-										/>
-									</span>
-								</Link>
-							);
-						})}
-					</div>
-				</div>*/}
 
 				{/* admins */}
-				<div className="space-y-2">
+				<div className="space-y-2 hidden lg:block">
 					<h2 className="text-sm text-agrey-700 dark:text-agrey-400 font-medium cursor-default">
 						Acciones
 					</h2>
-					{(userSvc.getUserData().id === eventData.host.id || 1) && (
-						<div className="flex flex-col gap-y-2 w-[150px]">
-							{(userSvc.isAdmin() || 1) && (
-								<Button className="ghostgray space-x-2 small">
-									<span className="fa-regular fa-user"></span>
-									<span>Contactar</span>
+					<div className="flex flex-col gap-y-2 w-[150px]">
+						<Button className="ghostgray space-x-2 small" onClick={fn.openContactModal}>
+							<span className="fa-regular fa-user"></span>
+							<span>Contactar</span>
+						</Button>
+						{(userSvc.getUserData().id === eventData.host.id || userSvc.isAdmin()) && (
+							<>
+								{/* <Link to={ROUTES.events.edit.replace(/:id/, eventData.id)}>
+								<Button className="blue space-x-2 small w-full">
+									<span className="fa-regular fa-pen"></span>
+									<span>Editar</span>
 								</Button>
-							)}
-							<Button className="blue space-x-2 small">
-								<span className="fa-regular fa-pen"></span>
-								<span>Editar</span>
-							</Button>
-							<Button className="red space-x-2 small">
-								<span className="fa-regular fa-trash-alt"></span>
-								<span>Eliminar</span>
-							</Button>
-						</div>
-					)}
+							</Link> */}
+
+								<Button
+									className={`red space-x-2 small ${deleteLoading && 'loading'}`}
+									onClick={fn.onDeleteClick}
+								>
+									<span className="fa-regular fa-trash-alt"></span>
+									<span>Eliminar</span>
+								</Button>
+
+								{deleteError && (
+									<div className="text-red-500 text-sm">{deleteError}</div>
+								)}
+							</>
+						)}
+					</div>
 				</div>
 			</div>
 		</div>

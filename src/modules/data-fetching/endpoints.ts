@@ -30,7 +30,10 @@ const endpoints = {
 	},
 
 	user_events: {
-		list_events: `${_baseUrl}/user-events`, // GET
+		list: `${_baseUrl}/user-events/interacted`, // GET
+		list_created: `${_baseUrl}/user-events/created`, // GET
+
+		list_registered_ids: `${_baseUrl}/user-events/registered-ids`, // GET
 	},
 
 	admin: {

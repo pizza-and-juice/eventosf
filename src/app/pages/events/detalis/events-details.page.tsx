@@ -1,72 +1,37 @@
 /* eslint-disable no-mixed-spaces-and-tabs */
 
-import { signal } from '@preact/signals-react';
-import { useFormik } from 'formik';
-import { createContext, useContext, useEffect, useState } from 'react';
-import { UseQueryResult, useMutation, useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useFloating, offset } from '@floating-ui/react';
-import Button from 'src/components/internal/button/button.component';
-import CommentComponent from 'src/components/internal/comments/comments.component';
-import Tag from 'src/components/internal/tags/tags.component';
-import Upvote from 'src/components/internal/upvote/upvote.component';
-import CommentsSkeleton from 'src/components/skeletons/comments/comments.skeleton';
-import ProjectMainDetailsSkeleton from 'src/components/skeletons/project/main-details/project-main-details.skeleton';
-import { AddProjectCommentDto } from 'src/shared/api/dto/project/add-comment.dto';
-import QueryApi from 'src/shared/api/query-api';
-import { CommentModel } from 'src/shared/models/projects/project-comment.model';
-import { OneProjectModel } from 'src/shared/models/projects/project.model';
-import AuthSvcContext from 'src/shared/services/auth/auth.context';
-import AuthService from 'src/shared/services/auth/auth.service';
-import DocTitleSvcContext from 'src/shared/services/doc-title/doc-title.context';
-import DocumentTitleService from 'src/shared/services/doc-title/doc-title.service';
-import ModalSvcContext from 'src/shared/services/modal/modal.context';
-import ModalService from 'src/shared/services/modal/modal.service';
-import UserSvcContext from 'src/shared/services/user/user.context';
-import UserService from 'src/shared/services/user/user.service';
-import { isLinkedInURL } from 'src/shared/utils/functions';
-import APP_MODALS from 'src/static/enums/app.modals';
-import QUERY_KEYS from 'src/static/query.keys';
-import ROUTES from 'src/static/router.data';
-import ShareProjectPanel from 'src/components/not-reusable/share-project/share-project.nr.component';
-import { onUpvoteMutate_singleProject } from 'src/shared/api/mutations/upvote.mutation';
-import {
-	addCommentFailure,
-	addCommentOptimisicUpdate,
-	addCommentSuccess,
-} from 'src/shared/api/mutations/comments.mutation';
-import api from '@modules/data-fetching/api';
+import { useMutation, useQuery } from '@tanstack/react-query';
+
 import {
 	EventDetailsPageCtx,
 	EventDetailsPageCtxType,
 } from '@modules/events/details/events-details.context';
+
+// services
+import DocTitleSvcContext from '@shared/services/doc-title/doc-title.context';
+import DocumentTitleService from '@shared/services/doc-title/doc-title.service';
+import ModalSvcContext from '@shared/services/modal/modal.context';
+import UserSvcContext from '@shared/services/user/user.context';
+
+// data - fetching
+import api from '@modules/data-fetching/api';
+
+// module
 import EventsDetailsView from '@modules/events/details/event-details.view';
 import SummaryTab from '@modules/events/details/tabs/summary.tab';
 import AttendeesTab from '@modules/events/details/tabs/attendees.tab';
 
-type QueryCtxType = {
-	projectQuery: UseQueryResult<OneProjectModel, unknown>;
-};
+// shared
+import queryClient from '@shared/instances/query-client.instance';
+import AuthSvcContext from '@shared/services/auth/auth.context';
 
-// @ts-expect-error - untyped library
-const QueryCtx = createContext<QueryCtxType>();
-
-function QueryComponent({ children }: { children: React.ReactNode }) {
-	const params = useParams<{ id: string }>();
-	const projectId = Number(params.id);
-
-	// *~~~ http req ~~~* //
-	const projectQuery = useQuery([QUERY_KEYS.GET_ONE_PROJECT, projectId], () =>
-		QueryApi.projects.getOne(projectId)
-	);
-
-	const ctxObject = {
-		projectQuery,
-	};
-
-	return <QueryCtx.Provider value={ctxObject}>{children}</QueryCtx.Provider>;
-}
+// static
+import QUERY_KEYS from '@static/query.keys';
+import APP_MODALS from '@static/enums/app.modals';
+import ROUTES from '@static/router.data';
 
 export default function EventsDetailsPage() {
 	// #region dependencies
@@ -74,6 +39,8 @@ export default function EventsDetailsPage() {
 	const authSvc = useContext(AuthSvcContext);
 	const userSvc = useContext(UserSvcContext);
 	const modalSvc = useContext(ModalSvcContext);
+
+	const navigate = useNavigate();
 	const params = useParams<{ id: string }>();
 	const eventId = params.id!;
 
@@ -103,56 +70,47 @@ export default function EventsDetailsPage() {
 	});
 
 	// GET user registration
-	// const {
-	// 	data: userUpvotes,
-	// 	isLoading: userUpvotesLoading,
-	// 	isError: userUpvotesError,
-	// } = useQuery(
-	// 	[QUERY_KEYS.GET_USER_ONE_UPVOTE, userSvc.getUserData().id],
-	// 	() => QueryApi.user.getUpvotedProject(userSvc.getUserData().id /*, projectId*/),
-	// 	{
-	// 		enabled: authSvc.isLoggedIn(),
-	// 	}
-	// );
+	const [userRegistered, setUserRegistered] = useState(false);
+
+	const userRegistrationQuery = useQuery({
+		queryKey: [QUERY_KEYS.LIST_USER_REGISTERED_EVENTS_IDS, userSvc.getUserData().id, eventId],
+		queryFn: () =>
+			api.user_events.list_registered_ids({
+				event_ids: [eventId],
+			}),
+		enabled: authSvc.isLoggedIn || true,
+	});
+
+	useEffect(() => {
+		if (userRegistrationQuery.isSuccess) {
+			const registeredEvents = userRegistrationQuery.data;
+			setUserRegistered(registeredEvents.includes(eventId));
+		}
+	}, [userRegistrationQuery.isSuccess, userRegistrationQuery.data, eventId]);
 
 	// POST register
-	// const postUpvoteMutation = useMutation({
-	// 	mutationFn: (prjctId: number) =>
-	// 		QueryApi.projects.addUpvote(userSvc.getUserData().id, prjctId),
-
-	// 	// optimistic update to have a better performance
-	// 	onMutate: (prjctId: number) =>
-	// 		onUpvoteMutate_singleProject({
-	// 			operation: 1,
-	// 			projectId: prjctId,
-	// 			userId: userSvc.getUserData().id,
-	// 		}),
-
-	// 	onError: () => {
-	// 		toast.error('Error upvoting project');
-	// 	},
-	// });
+	const registerMutation = useMutation({
+		mutationFn: (eventId: string) =>
+			api.events_actions.register({
+				eventId,
+			}),
+	});
 
 	// DELETE unregister
-	// const delUpvoteMutation = useMutation({
-	// 	mutationFn: (prjctId: number) =>
-	// 		QueryApi.projects.delUpvote(userSvc.getUserData().id, prjctId),
+	const unregisterMutation = useMutation({
+		mutationFn: (eventId: string) =>
+			api.events_actions.unregister({
+				eventId,
+			}),
+	});
 
-	// 	onMutate: (prjctId: number) =>
-	// 		onUpvoteMutate_singleProject({
-	// 			operation: 0,
-	// 			projectId: prjctId,
-	// 			userId: userSvc.getUserData().id,
-	// 		}),
-
-	// 	onError: () => {
-	// 		toast.error('Error upvoting project');
-	// 	},
-	// });
+	// DELETE event
+	const deleteMutation = useMutation({
+		mutationFn: (eventId: string) => api.events.delete(eventId),
+	});
 
 	// #endregion
 
-	// *~~~ tabs ~~~* //
 	// #region tabs
 
 	const [activeTab, setActiveTab] = useState(0);
@@ -165,6 +123,7 @@ export default function EventsDetailsPage() {
 				setActiveTab(0);
 			},
 			Component: SummaryTab,
+			adminOnly: false,
 		},
 		{
 			id: 1,
@@ -173,6 +132,7 @@ export default function EventsDetailsPage() {
 				setActiveTab(1);
 			},
 			Component: AttendeesTab,
+			adminOnly: true,
 		},
 	];
 
@@ -575,76 +535,158 @@ export default function EventsDetailsPage() {
 
 	// #endregion
 
-	// *~~~ Share functionality ~~~* //
-	// #region
+	// #region fn
 
-	// const [isOpen, setIsOpen] = useState(false);
+	const [registerLoading, setRegisterLoading] = useState(false);
+	const [registerError, setRegisterError] = useState<string | null>(null);
 
-	// const { refs, floatingStyles } = useFloating({
-	// 	open: isOpen,
-	// 	onOpenChange: setIsOpen,
-	// 	placement: 'left',
-	// 	middleware: [offset(20)],
-	// });
+	async function onRegisterClick() {
+		// if (!authSvc.isLoggedIn) {
+		// 	modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
+		// 	return;
+		// }
 
-	// const { refs: tabletRefs, floatingStyles: tabletFloatingStyles } = useFloating({
-	// 	open: isOpen,
-	// 	onOpenChange: setIsOpen,
-	// 	placement: 'left-start',
-	// 	middleware: [offset(20)],
-	// });
+		setRegisterLoading(true);
+		setRegisterError(null);
 
-	// const { refs: mobileRefs, floatingStyles: mobileFloatingStyles } = useFloating({
-	// 	open: isOpen,
-	// 	onOpenChange: setIsOpen,
-	// 	placement: 'right-end',
-	// 	middleware: [offset(20)],
-	// });
+		try {
+			await registerMutation.mutateAsync(eventId);
+			await queryClient.refetchQueries({
+				queryKey: [QUERY_KEYS.RETRIEVE_EVENT, eventId],
+			});
 
-	// function onShareBtnClick() {
-	// 	setIsOpen(!isOpen);
-	// }
+			await toast.success('Te has registrado al evento correctamente');
+		} catch (error: any) {
+			if (error.response?.data?.code === '400_LIMIT_REACHED') {
+				setRegisterError('Límite alcanzado para este evento');
+				return;
+			} else {
+				setRegisterError(error.message || 'Error registrandose al evento');
+				console.error('Error registering to event:', error);
+			}
+		} finally {
+			setRegisterLoading(false);
+		}
+	}
 
+	const [unregisterLoading, setUnregisterLoading] = useState(false);
+	const [unregisterError, setUnregisterError] = useState<string | null>(null);
+
+	async function onUnregisterClick() {
+		// if (!authSvc.isLoggedIn) {
+		// 	modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
+		// 	return;
+		// }
+
+		setUnregisterLoading(true);
+		setUnregisterError(null);
+
+		try {
+			await unregisterMutation.mutateAsync(eventId);
+			await queryClient.refetchQueries({
+				queryKey: [QUERY_KEYS.RETRIEVE_EVENT, eventId],
+			});
+
+			await toast.success('Has desistido del evento correctamente');
+		} catch (error: any) {
+			setUnregisterError(error.message || 'Error desistiendo del evento');
+			console.error('Error unregistering from event:', error);
+		} finally {
+			setUnregisterLoading(false);
+		}
+	}
+
+	const [deleteLoading, setDeleteLoading] = useState(false);
+	const [deleteError, setDeleteError] = useState<string | null>(null);
+
+	async function onDeleteClick() {
+		// if (!authSvc.isLoggedIn) {
+		// 	modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
+		// 	return;
+		// }
+
+		setDeleteLoading(true);
+		setDeleteError(null);
+
+		try {
+			await deleteMutation.mutateAsync(eventId);
+			await queryClient.refetchQueries({
+				queryKey: [QUERY_KEYS.RETRIEVE_EVENT, eventId],
+			});
+
+			await toast.success('Evento eliminado correctamente');
+
+			navigate(ROUTES.events.root);
+		} catch (error: any) {
+			setDeleteError(error.message || 'Error eliminando el evento');
+			console.error('Error deleting event:', error);
+		} finally {
+			setDeleteLoading(false);
+		}
+	}
+
+	function openContactModal() {
+		// if (!authSvc.isLoggedIn) {
+		// 	modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
+		// 	return;
+		// }
+
+		modalSvc.open(APP_MODALS.CONTACT_MODAL, {
+			event: {
+				title: eventQuery.data!.title,
+				country: eventQuery.data!.country,
+				city: eventQuery.data!.city,
+				address: eventQuery.data!.address,
+			},
+			host: {
+				id: eventQuery.data!.host.id,
+				name: eventQuery.data!.host.name,
+				email: eventQuery.data!.host.email,
+				pfp: eventQuery.data!.host.pfp,
+			},
+		});
+	}
 	// #endregion
 
-	// *~~~ fx ~~~* //
-	// #region
-	// function openContactModal(project: OneProjectModel) {
-	// 	modalSvc.open(APP_MODALS.CONTACT_MODAL, {
-	// 		grantAmount: project.grantAmount,
-	// 		currency: project.currency,
-	// 		framework: project.framework,
-	// 		projectDeployment: project.projectDeployment,
-	// 		telegramUsername: project.telegramUsername,
-	// 		email: project.email,
-	// 		twitterLinkedinUrl: project.twitterLinkedinUrl,
-	// 		walletAddress: project.walletAddress,
-	// 	});
-	// }
-
-	// function onDeleteProjectClick(_: OneProjectModel) {
-	// 	modalSvc.open(APP_MODALS.DELETE_PROJECT, {
-	// 		project: _,
-	// 	});
-	// }
-	// #endregion
-
-	// *~~~ render ~~~* //
-	// if (projectIsError || (!projectIsLoading && !projectData)) return <div>error</div>;
-
-	// if (authSvc.isLoggedIn() && (userUpvotesError || (!userUpvotesLoading && !userUpvotes))) {
-	// 	<div>error fetching user data</div>;
-	// }
+	// #region page ctx
 
 	const ctx: EventDetailsPageCtxType = {
-		refs: {},
-		fn: {},
 		state: {
 			activeTab,
 			tabs,
+
+			userRegistered,
+
+			register: {
+				registerLoading,
+				registerError,
+			},
+
+			unregister: {
+				unregisterLoading,
+				unregisterError,
+			},
+
+			delete: {
+				deleteLoading,
+				deleteError,
+			},
 		},
+
+		fn: {
+			onRegisterClick,
+			onUnregisterClick,
+			onDeleteClick,
+			openContactModal,
+		},
+
 		queries: {
 			eventQuery,
+			userRegistrationQuery,
+		},
+
+		requests: {
+			registerMutation,
 		},
 	};
 
@@ -653,4 +695,5 @@ export default function EventsDetailsPage() {
 			<EventsDetailsView />
 		</EventDetailsPageCtx.Provider>
 	);
+	// #endregion
 }
