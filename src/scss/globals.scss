@@ -1,0 +1,40 @@
+// // basic components
+@use 'src/components/internal/button/button.scss';
+@use 'src/components/internal/text-field/text-field.scss';
+@use 'src/components/internal/dropdown/dropdown.component.scss';
+@use 'src/components/internal/chip/chip.component.scss';
+
+@use 'src/modules/layout/header/header.scss';
+
+// @use 'src/components/internal/text-field/search-input.scss';
+@use 'src/components/internal/skeleton/skeleton.scss';
+@use './scroll.scss';
+
+// @use '../components/internal/search-bar/search-bar.scss';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// deactivate google auto fill styles
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	transition: background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s;
+}
+
+.form-control {
+	box-sizing: border-box;
+	clear: both;
+	position: relative;
+	text-align: inherit;
+}
+
+body {
+	font-family: 'Space Grotesk', sans-serif;
+}
+
+html {
+	scroll-behavior: smooth;
+}

@@ -1,0 +1,31 @@
+.modal_main_container {
+	@apply fixed;
+	@apply w-full;
+	@apply h-full;
+
+	@apply md:inset-0;
+
+	@apply top-0;
+	@apply left-0;
+
+	@apply z-modal;
+
+	@apply pointer-events-none;
+}
+
+.modal_overlay {
+	@apply absolute;
+	@apply w-full;
+	@apply h-full;
+	@apply top-0;
+	@apply left-0;
+	@apply z-0;
+
+	/* @apply bg-pink-200; */
+	@apply bg-black;
+	@apply bg-opacity-20;
+
+	@apply backdrop-blur-sm;
+
+	@apply pointer-events-auto;
+}

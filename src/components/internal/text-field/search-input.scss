@@ -1,0 +1,41 @@
+.search-input {
+	@apply p-2;
+
+	@apply h-[48px];
+	@apply w-full;
+
+	@apply rounded-xl;
+
+	@apply text-sm;
+	@apply text-agrey-900;
+	@apply dark:text-white;
+
+	@apply bg-transparent;
+
+	@apply border;
+	@apply border-agrey-300;
+	@apply dark:border-agrey-800;
+
+	//hover
+	@apply hover:border-ablue-200;
+	@apply hover:dark:border-ablue-300;
+
+	// focus
+	@apply focus:outline-none;
+	@apply focus:border-black;
+	@apply focus:dark:border-white;
+
+	@apply placeholder:text-sm;
+
+	// placeholder
+	@apply placeholder:text-agrey-500;
+	@apply placeholder:dark:text-agrey-600;
+
+	@apply disabled:text-ghostly_grey-300;
+	@apply disabled:dark:text-agrey-700;
+	@apply disabled:hover:border-transparent;
+
+	&.invalid {
+		@apply border-ared-500 #{!important}; /* Add a red border */
+	}
+}

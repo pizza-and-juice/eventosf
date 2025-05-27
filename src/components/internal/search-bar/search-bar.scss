@@ -1,0 +1,56 @@
+.search-bar-container {
+	@apply w-full;
+	@apply px-6;
+	@apply py-2;
+
+	@apply flex;
+	@apply gap-x-4;
+
+	@apply border;
+	@apply border-agrey-300;
+	@apply dark:border-agrey-800;
+	@apply rounded-2xl;
+}
+
+.search-bar-input {
+	@apply flex-grow;
+	@apply min-w-0;
+	@apply h-12;
+	@apply py-2;
+
+	@apply bg-transparent;
+
+	@apply text-agrey-600;
+
+	// focus
+	@apply focus:outline-none;
+}
+
+.search-bar-nav-container {
+	@apply w-full;
+	@apply px-6;
+	@apply py-2;
+
+	@apply flex;
+	@apply gap-x-4;
+
+	@apply border;
+	@apply border-agrey-300;
+	@apply dark:border-agrey-800;
+	@apply rounded-2xl;
+}
+
+.search-bar-nav-input {
+	// @apply w-full;
+	@apply flex-grow;
+	@apply min-w-0;
+	@apply h-8;
+	@apply py-2;
+
+	@apply bg-transparent;
+
+	@apply text-agrey-600;
+
+	// focus
+	@apply focus:outline-none;
+}

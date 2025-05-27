@@ -1,0 +1,52 @@
+.tooltip {
+	@apply absolute;
+	@apply z-10;
+	@apply p-2;
+	@apply text-sm;
+	@apply font-semibold;
+
+	max-width: 300px;
+	min-width: 120px;
+	white-space: normal;
+
+	@apply text-center;
+
+	@apply dark:bg-dark-900;
+	@apply bg-light-900;
+
+	@apply dark:text-white;
+	@apply text-black;
+
+	@apply rounded-lg;
+	@apply shadow-md;
+
+	animation: op1 150ms linear;
+
+	// arrow
+	&::before {
+		content: '';
+		@apply absolute;
+		@apply border-solid;
+		@apply border-transparent;
+	}
+}
+
+@keyframes op1 {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 100;
+	}
+}
+
+@keyframes opR {
+	from {
+		opacity: 100;
+	}
+
+	to {
+		opacity: 0;
+	}
+}

@@ -1,0 +1,14 @@
+.tag_button {
+    @apply flex;
+    @apply items-center;
+    @apply gap-x-2;
+
+    @apply transition-all;
+    @apply duration-200;
+    @apply ease-in-out;
+}
+
+.tag_button:disabled {
+    @apply bg-light-900;
+    @apply text-ghostly_grey-100;
+}

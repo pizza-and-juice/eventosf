@@ -1,0 +1,24 @@
+.bg-blue-700 {
+    background-color: #1e40af;
+  }
+  
+.bg-red-500 {
+    background-color: #ef4444;
+  }
+
+  .notification {
+    display: none;
+  }
+  
+  .notification.show {
+    display: block;
+  }
+  
+  .notification.error {
+    background-color: #ff0000; /* Red background for error */
+  }
+  
+  .notification.success {
+    background-color: #007bff; /* Blue background for success */
+    color: #fff; /* White text color for success */
+  }

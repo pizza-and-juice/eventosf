@@ -1,0 +1,231 @@
+.comp_button {
+	@apply relative;
+
+	@apply px-6;
+	@apply py-2;
+
+	@apply h-[48px];
+
+	@apply overflow-hidden;
+
+	@apply rounded-full;
+
+	@apply text-sm;
+	@apply text-center;
+
+	// @apply disabled:text-ghostly_grey-300;
+	// @apply disabled:bg-ghostly_grey-300;
+
+	// @apply disabled:border-transparent;
+	@apply disabled:pointer-events-none;
+
+	@apply select-none;
+	@apply cursor-pointer;
+
+	.click_overlay {
+		@apply absolute;
+
+		border-radius: 50%;
+		transform: scale(0);
+		animation: ripple 500ms linear;
+
+		@apply bg-white;
+		@apply bg-opacity-70;
+
+		@apply pointer-events-none;
+	}
+
+	&.blue {
+		@apply bg-ablue-500;
+		@apply text-white;
+
+		@apply hover:bg-ablue-400;
+
+		@apply active:bg-ablue-800;
+
+		@apply disabled:bg-ghostly_grey-100;
+		@apply disabled:text-ghostly_grey-300;
+	}
+
+	&.red {
+		@apply bg-ared-500;
+		@apply text-white;
+
+		@apply hover:bg-ared-400;
+
+		@apply active:bg-ared-800;
+
+		@apply disabled:bg-ghostly_grey-100;
+		@apply disabled:text-ghostly_grey-300;
+	}
+
+	&.secondary {
+		@apply border;
+		@apply border-agrey-900;
+		@apply dark:border-agrey-50;
+
+		@apply bg-transparent;
+
+		@apply text-black;
+		@apply dark:text-white;
+
+		@apply hover:border-ablue-300;
+		@apply hover:dark:border-ablue-300;
+
+		@apply active:border-agrey-700;
+		@apply active:dark:border-agrey-400;
+
+		@apply disabled:border-ghostly_grey-100;
+		@apply disabled:dark:border-agrey-800;
+
+		@apply disabled:text-opacity-25;
+	}
+
+	&.ghostgray {
+		@apply bg-ghostly_grey-50;
+		@apply dark:bg-dark-900;
+		@apply border;
+		@apply border-ghostly_grey-50;
+		@apply dark:border-agrey-50;
+
+		@apply text-black;
+		@apply dark:text-white;
+
+		@apply hover:bg-ghostly_grey-100;
+		@apply hover:border-ghostly_grey-100;
+		@apply dark:hover:bg-abrandc-dark-blackish;
+		@apply dark:hover:border-ablue-300;
+
+		@apply active:bg-ghostly_grey-200;
+		@apply active:border-ghostly_grey-200;
+		// @apply active:dark:bg-abrandc-dark-blackish;
+		// @apply active:dark:border-abrandc-dark-blackish;
+
+		@apply disabled:bg-ghostly_grey-100;
+		@apply disabled:border-ghostly_grey-100;
+		@apply disabled:text-ghostly_grey-300;
+		@apply dark:disabled:bg-abrandc-dark-blackish;
+		@apply dark:disabled:border-agrey-800;
+		@apply dark:disabled:text-agrey-700;
+
+		&.loading {
+			&::after {
+				@apply border-l-agrey-800;
+				@apply border-b-agrey-800;
+				@apply dark:border-l-white;
+				@apply dark:border-b-white;
+			}
+		}
+	}
+
+	&.small {
+		@apply py-2;
+		@apply px-6;
+
+		@apply h-[36px];
+	}
+
+	&.loading {
+		@apply pointer-events-none;
+		@apply relative;
+		@apply select-none;
+		@apply text-transparent #{!important};
+
+		// make all the tags inside transparent
+		* {
+			@apply opacity-0;
+		}
+
+		&::after {
+			content: '';
+			@apply block;
+			@apply absolute;
+
+			// @apply absolute;
+			// left: calc(50% - (1rem * 0.5));
+			// top: calc(50% - (1rem * 0.5));
+
+			@apply top-[calc(50%-(1rem*0.5))];
+			@apply left-[calc(50%-(1rem*0.5))];
+
+			@apply rounded-full;
+
+			@apply border-2;
+			@apply border-agrey-100;
+			@apply border-r-transparent;
+			@apply border-t-transparent;
+
+			@apply h-4;
+			@apply w-4;
+
+			@apply animate-spin;
+
+			// border: 2px solid #dbdbdb;
+			// border-radius: 9999px;
+			// border-right-color: transparent;
+			// border-top-color: transparent;
+			// display: block;
+			// height: 1em;
+			// position: relative;
+			// width: 1em;
+		}
+	}
+}
+
+.bbttnn {
+	&.loading {
+		@apply pointer-events-none;
+		@apply relative;
+		@apply select-none;
+		@apply text-transparent #{!important};
+
+		// make all the tags inside transparent
+		* {
+			@apply opacity-0;
+		}
+
+		&::after {
+			content: '';
+			@apply block;
+			@apply absolute;
+
+			// @apply absolute;
+			// left: calc(50% - (1rem * 0.5));
+			// top: calc(50% - (1rem * 0.5));
+
+			@apply top-[calc(50%-(1rem*0.5))];
+			@apply left-[calc(50%-(1rem*0.5))];
+
+			@apply rounded-full;
+
+			@apply border-2;
+			@apply border-agrey-800;
+			@apply dark:border-white;
+			@apply border-r-transparent;
+			@apply border-t-transparent;
+			@apply dark:border-t-transparent;
+			@apply dark:border-r-transparent;
+
+			@apply h-4;
+			@apply w-4;
+
+			@apply animate-spin;
+
+			// border: 2px solid #dbdbdb;
+			// border-radius: 9999px;
+			// border-right-color: transparent;
+			// border-top-color: transparent;
+			// display: block;
+			// height: 1em;
+			// position: relative;
+			// width: 1em;
+		}
+	}
+}
+
+@keyframes ripple {
+	to {
+		transform: scale(4);
+		opacity: 0;
+	}
+}

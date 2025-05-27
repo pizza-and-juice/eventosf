@@ -1,0 +1,25 @@
+.ripple_container {
+	@apply relative;
+
+	@apply overflow-hidden;
+}
+
+.ripple_effect {
+	@apply absolute;
+
+	border-radius: 50%;
+	transform: scale(0);
+	animation: ripple 500ms linear;
+
+	@apply bg-white;
+	@apply bg-opacity-70;
+
+	@apply pointer-events-none;
+}
+
+@keyframes ripple {
+	to {
+		transform: scale(4);
+		opacity: 0;
+	}
+}

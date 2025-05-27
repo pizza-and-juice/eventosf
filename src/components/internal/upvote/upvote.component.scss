@@ -1,0 +1,50 @@
+.upvote_button {
+	@apply flex;
+	@apply flex-col;
+
+	@apply items-center;
+	@apply justify-center;
+
+	@apply gap-y-2;
+
+	@apply bg-transparent;
+
+	@apply text-sm;
+
+	@apply w-[106px];
+	@apply h-[106px];
+
+	@apply p-2;
+
+	@apply border;
+	@apply border-black;
+
+	@apply dark:border-white;
+	@apply dark:text-white;
+
+	@apply hover:text-ghostly_grey-300;
+	@apply hover:border-ghostly_grey-300;
+
+	@apply hover:dark:border-ghostly_grey-700;
+	@apply hover:dark:text-ghostly_grey-700;
+
+	&.small {
+		@apply w-[78px];
+		@apply h-[38px];
+
+		@apply rounded-lg;
+
+		@apply py-1;
+		@apply px-2;
+	}
+
+	&.active {
+		@apply border-transparent;
+
+		@apply bg-abrandc-dark-blue;
+		@apply hover:bg-ablue-200;
+
+		@apply text-white;
+		@apply hover:border-transparent;
+	}
+}

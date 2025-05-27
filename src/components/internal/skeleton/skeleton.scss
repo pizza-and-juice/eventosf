@@ -1,0 +1,33 @@
+.skeleton-title {
+	@apply h-2.5;
+	@apply rounded-full;
+
+	@apply bg-gray-200;
+	@apply dark:bg-agrey-800;
+}
+
+.skeleton-line {
+	@apply h-2;
+	@apply rounded-full;
+
+	@apply bg-gray-200;
+	@apply dark:bg-agrey-800;
+}
+
+.skeleton-box {
+	@apply h-5;
+
+	@apply bg-gray-200;
+	@apply dark:bg-agrey-800;
+}
+
+.skeleton-circle {
+	@apply rounded-full;
+
+	@apply bg-gray-200;
+	@apply dark:bg-agrey-800;
+}
+
+.skeleton-container {
+	@apply animate-pulse;
+}

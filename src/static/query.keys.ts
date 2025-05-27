@@ -1,0 +1,32 @@
+const QUERY_KEYS = {
+	// events
+	LIST_EVENTS: 'get_LIST_EVENTS',
+	RETRIEVE_EVENT: 'get_RETRIEVE_EVENT',
+
+	// projects
+	GET_ALL_PROJECTS: '2_',
+	GET_ONE_PROJECT: '3_',
+	GET_SUBMITTED_PROJECTS: '5_',
+	GET_PROJECT_COMMENTS: '6_',
+
+	// profile
+	PROFILE_DATA: '7_',
+	GET_USER_ALL_UPVOTES: '8_',
+	GET_USER_ONE_UPVOTE: '9_',
+
+	// image
+	RENDER_IMAGE: '10_',
+
+	// dashboard
+	ADMIN_GET_TOTAL_SUBMBISSIONS: '99_',
+	ADMIN_GET_TOTAL_USERS: 'total_users',
+	ADMIN_GET_TOTAL_GRANTS: 'total_grants',
+
+	GET_PROJECT_STATUS: 'project_status',
+	GET_NEW_SUBMISSIONS: '11_',
+
+	ADMIN_GET_USER_DATA: '12_',
+	ADMIN_GET_GRANT_CHART_DATA: '13_',
+};
+
+export default QUERY_KEYS;

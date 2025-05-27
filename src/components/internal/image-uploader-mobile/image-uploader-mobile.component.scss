@@ -1,0 +1,43 @@
+.img_uploader {
+	@apply w-full;
+    @apply h-[164px];
+
+	@apply flex;
+	@apply flex-col;
+
+	@apply gap-y-4;
+
+	@apply border;
+	@apply border-transparent;
+	@apply rounded-xl;
+
+	@apply bg-light-900;
+	@apply dark:bg-dark-900;
+
+    @apply hover:border-ablue-200;
+	@apply hover:dark:border-ablue-400;
+
+	@apply transition-colors;
+	@apply duration-200;
+}
+
+.img_uploader_uploaded {
+	@apply w-full;
+    @apply h-[164px];
+
+	@apply flex;
+	@apply flex-col;
+	@apply gap-y-4;
+
+	@apply justify-center;
+	@apply items-center;
+
+	@apply border;
+	@apply border-transparent;
+	@apply rounded-xl;
+
+	@apply bg-light-900;
+	@apply dark:bg-dark-900;
+	
+	@apply overflow-hidden;
+}

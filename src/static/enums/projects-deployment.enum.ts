@@ -1,0 +1,7 @@
+export enum DeploymentType {
+	ALL = '',
+	EXTERNAL_VM = 'EXTERNAL_VM',
+	BITCON_DAPP = 'BITCOIN_DAPP',
+	ETH_DAPP = 'ETH_DAPP',
+	SOFTWARE_BASED_APP = 'SOFTWARE_BASED_APP',
+}

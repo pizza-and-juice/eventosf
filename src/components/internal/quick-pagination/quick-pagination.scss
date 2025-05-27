@@ -1,0 +1,27 @@
+.quick-pagination {
+	@apply flex;
+	@apply gap-x-4;
+	@apply items-center;
+
+	.prev-button,
+	.next-button {
+		@apply hover:bg-abrandc-light-grey;
+		@apply text-agrey-500;
+
+		// dark
+		@apply dark:hover:bg-abrandc-dark-grey;
+		@apply dark:text-white;
+
+		// disabled
+		@apply disabled:hover:bg-transparent;
+		@apply disabled:text-agrey-200;
+
+		// disabled dark
+		@apply disabled:dark:text-agrey-800;
+		@apply disabled:dark:hover:bg-transparent;
+
+		@apply rounded-lg;
+		@apply px-2;
+		@apply py-2;
+	}
+}

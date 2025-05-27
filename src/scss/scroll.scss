@@ -1,0 +1,26 @@
+// custom scroll
+/* width */
+.scroll-sm::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+/* Track */
+.scroll-sm::-webkit-scrollbar-track {
+	@apply bg-abrandc-light-grey;
+	@apply dark:bg-agrey-900;
+	@apply rounded-full;
+}
+
+/* Handle */
+.scroll-sm::-webkit-scrollbar-thumb {
+	@apply bg-agrey-400;
+	@apply dark:bg-agrey-800;
+	@apply rounded-full;
+}
+
+/* Handle on hover */
+.scroll-sm::-webkit-scrollbar-thumb:hover {
+	@apply dark:bg-agrey-700;
+	@apply bg-agrey-500;
+}

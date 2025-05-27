@@ -1,0 +1,40 @@
+.text-link {
+    @apply text-base;
+    @apply font-medium;
+
+    @apply text-black;
+    @apply dark:text-white;
+
+    @apply underline;
+
+    @apply hover:text-ablue-200;
+
+    @apply transition-all;
+    @apply duration-200;
+    @apply ease-in-out;
+
+    @apply active:text-ablue-700;
+
+    &.blue {
+        @extend .text-link;
+        
+        @apply text-abrandc-dark-blue;
+    }
+
+    &.small {
+        @extend .text-link;
+
+        @apply text-sm;
+    }
+
+    &.inactive {
+        @extend .text-link;
+
+        @apply text-light-600;
+        @apply hover:text-light-600;
+
+        @apply no-underline;
+
+        @apply cursor-default;
+    }
+}

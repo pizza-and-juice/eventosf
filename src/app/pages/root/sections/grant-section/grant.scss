@@ -1,0 +1,8 @@
+.bgg {
+	@apply bg-[url('media/landing/abstract-l.png')];
+	@apply dark:bg-[url('media/landing/abstract-d.png')];
+
+	@apply bg-center;
+	@apply bg-no-repeat;
+	@apply sm:bg-contain;
+}

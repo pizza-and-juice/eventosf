@@ -1,0 +1,60 @@
+.checkbox {
+	/* Add if not using autoprefixer */
+	-webkit-appearance: none;
+	appearance: none;
+
+	@apply relative;
+
+	@apply w-[20px];
+	@apply h-[20px];
+
+	@apply border-2;
+	@apply border-agrey-300;
+	border-radius: 50%;
+
+	@apply hover:border-ablue-200;
+
+	@apply active:border-ablue-500;
+
+	@apply cursor-pointer;
+
+	@apply disabled:cursor-default;
+
+	transition: all ease-in-out 200ms;
+}
+
+.checkbox:disabled:hover {
+	@apply border-ghostly_grey-100;
+}
+
+.checkbox:checked {
+	border: transparent;
+	@apply bg-ablue-500;
+}
+
+.checkbox:disabled:checked {
+	@apply bg-ghostly_grey-100;
+}
+
+.checkbox:checked::after {
+	display: block;
+}
+
+.checkbox::after {
+	display: none;
+	content: '';
+	position: absolute;
+
+	left: 50%;
+	top: 47%;
+
+	width: 5px;
+	height: 10px;
+
+	border: solid white;
+	border-width: 0 3px 3px 0;
+
+	-webkit-transform: translate(-50%, -50%) rotate(45deg);
+	-ms-transform: translate(-50%, -50%) rotate(45deg);
+	transform: translate(-50%, -50%) rotate(45deg);
+}

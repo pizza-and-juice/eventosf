@@ -1,0 +1,12 @@
+.img-bg{
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("src/assets/Abstract 3.png");
+    
+}
+.grid-template{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    
+}
