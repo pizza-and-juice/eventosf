@@ -58,11 +58,11 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 }
 
 type ReqParams = {
+	userId: string;
 	limit?: number;
 	offset?: number;
 	status?: EventStatus;
 	created_by?: string;
-	event_ids?: string[];
 };
 
 type Req2Params = {

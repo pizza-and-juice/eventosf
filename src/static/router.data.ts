@@ -28,9 +28,6 @@ const ROUTES = {
 	//profile
 	profile: {
 		root: '/profile/:id',
-		edit: '/profile/edit',
-		// upvotes: '/profile/upvotes',
-		// subsmissions: '/profile/submissions',
 	},
 
 	// apply for grant

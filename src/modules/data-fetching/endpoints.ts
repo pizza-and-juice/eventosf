@@ -25,14 +25,12 @@ const endpoints = {
 	},
 
 	user: {
-		// list: `${_baseUrl}/users`, // GET
+		list: `${_baseUrl}/users`, // GET
 		get: `${_baseUrl}/users/:id`, // GET
 	},
 
 	user_events: {
 		list: `${_baseUrl}/user-events/interacted`, // GET
-		list_created: `${_baseUrl}/user-events/created`, // GET
-
 		list_registered_ids: `${_baseUrl}/user-events/registered-ids`, // GET
 	},
 

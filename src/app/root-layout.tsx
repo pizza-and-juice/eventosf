@@ -14,12 +14,11 @@ import AuthRequiredLayout from '@modules/layout/auth-required.layout';
 
 // page
 import NotFoundPage from '@app/pages/not-found/404.page';
-
 import LandingPage from '@app/pages/root/root.page';
-
 import EventsPage from '@app/pages/events/root/events.page';
-import EventsDetailsPage from './pages/events/detalis/events-details.page';
+import EventsDetailsPage from '@app/pages/events/detalis/events-details.page';
 import CreateEventPage from '@app/pages/events/create/create-event.page';
+import ProfilePage from '@app/pages/profile/profile.page';
 
 // services
 import SettingsSvcContext from '@shared/services/settings/settings.context';
@@ -35,21 +34,10 @@ import 'src/scss/globals.scss';
 
 // modules
 import { ModalData } from '@modules/modals/modals.types';
-import { Toast } from 'node_modules/react-toastify/dist/components';
-
-// prettier-ignore
-const ProjectDetailsPage = lazy(() => import('./(projects-layout)/projects/details/project-details[id].page'));
-// prettier-ignore
-const EditProjectPage = lazy(() => import('./(header-footer-layout)/projects/edit/project-edit[idx].page'));
-const EditProjectsAdmin = lazy(
-	() => import('./(header-footer-layout)/projects/edit/project-edit[idx].admin.page')
-);
 
 // prettier-ignore
 
-const ProfilePage = lazy(() => import('./(header-footer-layout)/profile/profile.page'));
-
-const TestPage = lazy(() => import('./(header-footer-layout)/test/test.page'));
+const TestPage = lazy(() => import('./pages/test/test.page'));
 const UiKitPage = lazy(() => import('./dev/ui-kit/ui-kit'));
 
 function ScrollToTop() {
