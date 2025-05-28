@@ -1,4 +1,3 @@
-import { EventStatus } from '@shared/enums/networks-enum';
 import { z } from 'zod';
 
 function isAtLeastXDaysInFuture(date: Date, days: number = 3): boolean {
@@ -16,22 +15,34 @@ function isFutureDate(date: Date): boolean {
 
 export const create_event_schema = z
 	.object({
-		name: z.string().nonempty('Campo requerido'),
-		description: z.string().nonempty('Campo requerido').max(200, 'Máximo 200 caracteres'),
-		image: z
-			.instanceof(File)
-			.nullable()
-			.refine((file) => file instanceof File, { message: 'Campo requerido' }),
+		// Basic info
+		title: z.string().nonempty('Campo requerido'),
+		subtitle: z.string().nonempty('Campo requerido').max(100, 'Máximo 100 caracteres'),
+		description: z.string().nonempty('Campo requerido').max(1000, 'Máximo 1000 caracteres'),
+		image: z.instanceof(File, { message: 'Campo requerido' }),
+		// .refine((file) => file instanceof File, { message: 'Campo requerido' }),
 
+		// Location
+		country: z.string().nonempty('Campo requerido'),
+		city: z.string().nonempty('Campo requerido'),
 		address: z.string().nonempty('Campo requerido'),
 		start_date: z.string().nonempty('Campo requerido'),
 		end_date: z.string().nonempty('Campo requerido'),
 
-		number_of_attendees: z.number().min(50, 'Minimo 50').max(1000, 'Maximo 1000'),
+		// contact
+		website: z.string().url('Debe ser una URL válida').optional(),
 
-		status: z.string().refine((val) => {
-			return Object.values(EventStatus).includes(val as EventStatus);
-		}, 'Campo requerido'),
+		// capacity
+		attendees_capacity: z.union([z.string(), z.number()]).refine(
+			(val) => {
+				if (val === '') return true; // permitir campo vacío al inicio
+				const num = typeof val === 'string' ? parseInt(val, 10) : val;
+				return !isNaN(num) && num >= 10 && num <= 1000;
+			},
+			{
+				message: 'El aforo debe ser entre 10 y 1000 asistentes',
+			}
+		),
 
 		accept_terms: z.boolean().refine((val) => val === true, {
 			message: 'Debe aceptar los términos y condiciones',

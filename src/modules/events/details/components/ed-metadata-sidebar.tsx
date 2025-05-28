@@ -9,27 +9,28 @@ import {
 	useFloating,
 	useInteractions,
 } from '@floating-ui/react';
+import { Link } from 'react-router-dom';
 
 // services
-import AuthSvcContext from '@shared/services/auth/auth.context';
 import UserSvcContext from '@shared/services/user/user.context';
 
 // components
 import Button from '@components/internal/button/button.component';
+import ShareProjectPanel from '@components/not-reusable/share-project/share-project.nr.component';
 
 // shared
 import useMediaQuery from '@shared/hooks/use-mediaquery';
+import { useDefaultUserImg } from '@shared/utils/functions';
 
 // modules
-import { EventsPageCtx } from '@modules/events/root/events.context';
-import { Link } from 'react-router-dom';
+
+// static
 import ROUTES from '@static/router.data';
+
+// context
 import { EventDetailsPageCtx } from '../events-details.context';
-import { useDefaultUserImg } from '@shared/utils/functions';
-import ShareProjectPanel from '@components/not-reusable/share-project/share-project.nr.component';
 
 export default function MetadataSidebar() {
-	const authSvc = useContext(AuthSvcContext);
 	const userSvc = useContext(UserSvcContext);
 
 	const desktop = useMediaQuery('(min-width: 1024px)');
@@ -237,6 +238,11 @@ export default function MetadataSidebar() {
 									<span>Editar</span>
 								</Button>
 							</Link> */}
+
+								<Button className={`blue space-x-2 small ${false && 'loading'}`}>
+									<span className="fa-regular fa-check"></span>
+									<span>Completar</span>
+								</Button>
 
 								<Button
 									className={`red space-x-2 small ${deleteLoading && 'loading'}`}

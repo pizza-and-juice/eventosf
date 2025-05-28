@@ -10,15 +10,8 @@ import ROUTES from 'src/static/router.data';
 export default function AuthRequiredLayout() {
 	const authSvc = useContext(AuthSvcContext);
 
-	// We are checking if the user is authenticated
-	const isAuthenticated = authSvc.isLoggedIn();
-
-	// here we are checking if the user is an admin or not, i don`t know how to identify an admin but this will give you some insights about the logic i wanted to implement
-	// const isAdmin = true;
-
-	// here we are redirecting unauthenticated users to the login page so that they can login
-	if (!isAuthenticated) {
-		return <Navigate to={ROUTES.root} />;
+	if (!authSvc.isLoggedIn) {
+		return <Navigate to={ROUTES.root.concat('?a=l')} />;
 	}
 
 	// We will then allow the admins to access the dashboard

@@ -3,7 +3,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { CreateEventForm } from './create_event.schema';
 
 export type CreateEventPageCtxType = {
-	form: UseFormReturn<CreateEventForm, any, undefined>;
+	form: UseFormReturn<CreateEventForm, any, CreateEventForm>;
 
 	state: {
 		activeSection: number;
@@ -14,6 +14,8 @@ export type CreateEventPageCtxType = {
 				onClick: () => void;
 			}[];
 		}[];
+
+		globalError: string | null;
 	};
 
 	fn: {

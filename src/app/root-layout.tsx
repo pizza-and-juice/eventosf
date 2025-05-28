@@ -54,7 +54,7 @@ function RoutingComponent() {
 	return (
 		<>
 			<Routes>
-				{/* header footer layout */}
+				{/* unprotected */}
 				<Route element={<MainLayout />}>
 					{/* dev only routes */}
 					{import.meta.env.DEV && (
@@ -66,29 +66,22 @@ function RoutingComponent() {
 
 					<Route path={ROUTES.root} element={<LandingPage />} />
 
-					{/* profile */}
-					<Route path={ROUTES.profile.root} element={<ProfilePage />} />
-
 					{/* events */}
 					<Route path={ROUTES.events.root} element={<EventsPage />} />
 					<Route path={ROUTES.events.create} element={<CreateEventPage />} />
-					<Route path={ROUTES.events.details} element={<EventsDetailsPage />} />
 
 					{/* 404 */}
 					<Route path={ROUTES.any} element={<NotFoundPage />} />
+				</Route>
 
-					{/* *~~~ proteted routes ~~~* */}
-					<Route element={<AuthRequiredLayout />}>
-						{/* <Route path={ROUTES.profile.edit} element={<EditProfilePage />} />
+				{/* protected */}
+				<Route element={<AuthRequiredLayout />}>
+					<Route element={<MainLayout />}>
+						{/* events */}
+						<Route path={ROUTES.events.details} element={<EventsDetailsPage />} />
 
-						<Route path={ROUTES.projects.edit} element={<EditProjectPage />} />
-						<Route element={<AdminRequiredLayout />}>
-							<Route path={ROUTES.dashboard.root} element={<DashboardPage />} />
-							<Route
-								path={ROUTES.admin.projects.edit}
-								element={<EditProjectsAdmin />}
-							/>
-						</Route> */}
+						{/* profile */}
+						<Route path={ROUTES.profile.root} element={<ProfilePage />} />
 					</Route>
 				</Route>
 			</Routes>

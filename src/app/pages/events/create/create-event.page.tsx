@@ -4,39 +4,37 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-// services
-import UserSvcContext from 'src/shared/services/user/user.context';
-import AuthSvcContext from 'src/shared/services/auth/auth.context';
-import ModalSvcContext from 'src/shared/services/modal/modal.context';
-
-// context
-
-// static
-import ROUTES from '@static/router.data';
-import APP_MODALS from 'src/static/enums/app.modals';
+// module
 import {
 	create_event_schema,
 	CreateEventForm,
 } from '@modules/events/create-event/create_event.schema';
-import { EventStatus } from '@shared/enums/networks-enum';
-
-// data-fetching
-import api from '@modules/data-fetching/api';
-import { CreateEventDto } from '@modules/data-fetching/dto/events.dto';
-
-// module
 import {
 	CreateEventPageCtxType,
 	CreateEventPageCtx,
 } from '@modules/events/create-event/create-event.context';
 import CreateNetworkView from '@modules/events/create-event/create-event.view';
+
+// services
+import AuthSvcContext from '@shared/services/auth/auth.context';
+import ModalSvcContext from '@shared/services/modal/modal.context';
+
+// static
+import ROUTES from '@static/router.data';
+
+// data-fetching
+import api from '@modules/data-fetching/api';
+import { CreateEventDto } from '@modules/data-fetching/dto/events.dto';
+
+// styles
 import styles from './create-l1.module.css';
+import APP_MODALS from '@static/enums/app.modals';
+import { toast } from 'react-toastify';
 
 export default function CreateEventPage() {
 	// #region dependencies
 
 	const authSvc = useContext(AuthSvcContext);
-	const userSvc = useContext(UserSvcContext);
 	const modalSvc = useContext(ModalSvcContext);
 
 	const navigate = useNavigate();
@@ -45,43 +43,50 @@ export default function CreateEventPage() {
 
 	// #region form
 
+	const [globalError, setGlobalError] = useState<string | null>(null);
+
 	const form = useForm<CreateEventForm>({
 		resolver: zodResolver(create_event_schema),
 		mode: 'all',
 
 		defaultValues: {
-			name: '',
+			title: '',
+			subtitle: '',
 			description: '',
-			image: null,
+			image: undefined,
 
+			country: '',
+			city: '',
 			address: '',
 			start_date: '',
 			end_date: '',
 
-			number_of_attendees: '',
+			website: '',
+
+			attendees_capacity: '',
 
 			accept_terms: false,
-
-			status: EventStatus.INCOMING,
 		},
 	});
 
 	const {
-		watch,
-		clearErrors,
-		setError,
 		formState: { errors },
 	} = form;
 
 	async function manualHandleSubmit() {
 		const dto: CreateEventDto = {
-			title: form.getValues('name'),
+			title: form.getValues('title'),
+			subtitle: form.getValues('subtitle'),
 			description: form.getValues('description'),
 			image: form.getValues('image'),
+
+			country: form.getValues('country'),
+			city: form.getValues('city'),
 			address: form.getValues('address'),
 			start_date: form.getValues('start_date'),
 			end_date: form.getValues('end_date'),
-			attendees_capacity: form.getValues('number_of_attendees'),
+
+			attendees_capacity: Number(form.getValues('attendees_capacity')),
 		};
 
 		// validate all fields
@@ -91,10 +96,10 @@ export default function CreateEventPage() {
 			return;
 		}
 
-		// if (!authSvc.isLoggedIn) {
-		// 	modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
-		// 	return;
-		// }
+		if (!authSvc.isLoggedIn) {
+			modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
+			return;
+		}
 
 		try {
 			// send request
@@ -102,14 +107,18 @@ export default function CreateEventPage() {
 
 			// redirect to event page
 
+			toast.success('Evento creado');
 			navigate(ROUTES.events.details.replace(':id', network_data.id));
 
 			form.reset();
-		} catch (err) {
-			console.log(err);
-
-			const customEvent = new CustomEvent('deploymenterror', { detail: err });
-			document.dispatchEvent(customEvent);
+		} catch (err: any) {
+			if (err?.response?.message) {
+				setGlobalError(err.response.message);
+			} else if (err?.message) {
+				setGlobalError(err.message);
+			} else {
+				setGlobalError('Ocurrió un error al crear el evento. intenta de nuevo mas tarde');
+			}
 		}
 	}
 
@@ -150,6 +159,12 @@ export default function CreateEventPage() {
 					},
 				},
 				{
+					name: 'Contacto',
+					onClick: () => {
+						window.location.href = '#event.contact';
+					},
+				},
+				{
 					name: 'Participantes',
 					onClick: () => {
 						window.location.href = '#event.attendees';
@@ -182,12 +197,13 @@ export default function CreateEventPage() {
 	useLayoutEffect(() => {
 		const sec1 = document.getElementById('event.essentials')!;
 		const sec2 = document.getElementById('event.location')!;
-		const sec3 = document.getElementById('event.attendees')!;
+		const sec3 = document.getElementById('event.contact')!;
+		const sec4 = document.getElementById('event.attendees')!;
 		// const sec4 = document.getElementById('network.bridges')!;
 		// const sec4 = document.getElementById('network.initial-supply')!;
 		// const sec6 = document.getElementById('network.wrapper-node')!;
 
-		const secs = [sec1, sec2, sec3];
+		const secs = [sec1, sec2, sec3, sec4];
 
 		window.addEventListener('scroll', navHighlighter);
 
@@ -229,16 +245,14 @@ export default function CreateEventPage() {
 
 	// #endregion
 
-	// #region fn
-
-	// #endregion
-
 	const ctxObject: CreateEventPageCtxType = {
 		form,
 
 		state: {
 			activeSection,
 			link_group,
+
+			globalError,
 		},
 
 		fn: {

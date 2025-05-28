@@ -140,13 +140,13 @@ export default function Pagination({ metadata, onPageChange }: PaginationProps) 
 		<div className="pagination">
 			{/* total results */}
 			<div>
-				<h1 className="text-agrey-900 dark:text-white text-sm font-medium">
+				{/* <h1 className="text-agrey-900 dark:text-white text-sm font-medium">
 					<span className="md:block hidden">Results: </span>{' '}
 					{(metadata.current_page - 1) * metadata.items_per_page} -{' '}
 					{(metadata.current_page - 1) * metadata.items_per_page +
 						metadata.items_per_page}{' '}
 					of {metadata.total_items}
-				</h1>
+				</h1> */}
 			</div>
 
 			{/* buttons */}

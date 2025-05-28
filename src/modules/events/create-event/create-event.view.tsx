@@ -8,9 +8,10 @@ import ProjectCover from '@components/internal/project-cover/project-cover.compo
 
 // context
 import { CreateEventPageCtx, CreateEventPageCtxType } from './create-event.context';
+import Sidebar from './components/create-event-sidebar.component';
 
 export default function CreateNetworkView() {
-	const { form, fn, state, refs } = useContext<CreateEventPageCtxType>(CreateEventPageCtx);
+	const { form, fn, refs, state } = useContext<CreateEventPageCtxType>(CreateEventPageCtx);
 
 	const {
 		register,
@@ -60,18 +61,18 @@ export default function CreateNetworkView() {
 							{/* network name */}
 							<div className="field space-y-1">
 								<label className="text-xs  text-black dark:text-white">
-									Nombre del evento <span className="text-red-500">*</span>
+									Titulo del evento *
 								</label>
 								<div className="form-control">
 									<input
 										type="text"
 										placeholder="Nombre del evento"
-										className={`text-field ${errors.name && 'invalid'}`}
-										{...register('name')}
+										className={`text-field ${errors.title && 'invalid'}`}
+										{...register('title')}
 									/>
-									{errors.name && (
+									{errors.title && (
 										<div className="text-ared-500 text-xs">
-											{errors.name.message}
+											{errors.title.message}
 										</div>
 									)}
 								</div>
@@ -81,7 +82,30 @@ export default function CreateNetworkView() {
 							<div className="field space-y-1">
 								<div className="flex justify-between">
 									<label className="text-xs  text-black dark:text-white">
-										Descripción del evento
+										Subtitlo del evento *
+									</label>
+									<h3>{watch('subtitle')?.length} / 200</h3>
+								</div>
+								<div className="form-control">
+									<textarea
+										className={`text-field w-full min-h-[100px] max-h-[200px] ${
+											errors.subtitle && 'invalid'
+										}`}
+										{...register('subtitle')}
+									/>
+								</div>
+								{errors.subtitle && (
+									<div className="text-ared-500 text-xs">
+										{errors.subtitle.message}
+									</div>
+								)}
+							</div>
+
+							{/* currency name */}
+							<div className="field space-y-1">
+								<div className="flex justify-between">
+									<label className="text-xs  text-black dark:text-white">
+										Descripción del evento *
 									</label>
 									<h3>{watch('description')?.length} / 500</h3>
 								</div>
@@ -115,7 +139,6 @@ export default function CreateNetworkView() {
 									render={({ field: { onChange } }) => (
 										<ProjectCover
 											className={` ${errors.image && 'invalid'}`}
-											name="image"
 											onFileChange={(file) => onChange(file)}
 											onFileDelete={() => onChange(null)} // Permite borrar el archivo
 										/>
@@ -145,6 +168,46 @@ export default function CreateNetworkView() {
 							</div>
 
 							<div className="h-2" />
+
+							{/* country */}
+							<div className="field space-y-1">
+								<label className="text-xs text-black dark:text-white">Pais *</label>
+								<div className="form-control">
+									<input
+										type="text"
+										placeholder="Pais"
+										className={`text-field ${errors.country && 'invalid'}`}
+										{...register('country')}
+									/>
+								</div>
+
+								{errors.country && (
+									<div className="text-ared-500 text-xs">
+										{errors.country.message}
+									</div>
+								)}
+							</div>
+
+							{/* city */}
+							<div className="field space-y-1">
+								<label className="text-xs text-black dark:text-white">
+									Ciudad *
+								</label>
+								<div className="form-control">
+									<input
+										type="text"
+										placeholder="Ciudad"
+										className={`text-field ${errors.city && 'invalid'}`}
+										{...register('city')}
+									/>
+								</div>
+
+								{errors.city && (
+									<div className="text-ared-500 text-xs">
+										{errors.city.message}
+									</div>
+								)}
+							</div>
 
 							{/* address */}
 							<div className="field space-y-1">
@@ -212,6 +275,45 @@ export default function CreateNetworkView() {
 
 						<fieldset
 							className="space-y-4"
+							id="event.contact"
+							ref={(el) => refs.sectionRefs.current.push(el)}
+						>
+							<div className="space-y-1">
+								<h2 className="font-bold text-base sm:text-2xl text-black dark:text-white">
+									Contacto
+								</h2>
+								<p className="text-sm sm:text-base  text-agrey-700 dark:text-agrey-400">
+									Proporcione información de contacto para que los asistentes
+									puedan comunicarse con usted.
+								</p>
+							</div>
+
+							<div className="h-2" />
+
+							{/* website */}
+							<div className="field space-y-1">
+								<label className="text-xs text-black dark:text-white">
+									Sitio web *
+								</label>
+								<div className="form-control">
+									<input
+										type="text"
+										placeholder="Pais"
+										className={`text-field ${errors.website && 'invalid'}`}
+										{...register('website')}
+									/>
+								</div>
+
+								{errors.website && (
+									<div className="text-ared-500 text-xs">
+										{errors.website.message}
+									</div>
+								)}
+							</div>
+						</fieldset>
+
+						<fieldset
+							className="space-y-4"
 							id="event.attendees"
 							ref={(el) => refs.sectionRefs.current.push(el)}
 						>
@@ -233,21 +335,27 @@ export default function CreateNetworkView() {
 									<input
 										type="number"
 										className={`text-field ${
-											errors.number_of_attendees && 'invalid'
+											errors.attendees_capacity && 'invalid'
 										}`}
-										{...register('number_of_attendees', {
+										{...register('attendees_capacity', {
 											valueAsNumber: true,
 										})}
 									/>
 
-									{errors.number_of_attendees && (
+									{errors.attendees_capacity && (
 										<div className="text-ared-500 text-xs">
-											{errors.number_of_attendees.message}
+											{errors.attendees_capacity.message}
 										</div>
 									)}
 								</div>
 							</div>
 						</fieldset>
+
+						{state.globalError && (
+							<div className="py-4">
+								<div className="text-ared-500 text-xs">{state.globalError}</div>
+							</div>
+						)}
 
 						{/* send */}
 						<section className="space-y-6" id="grant.apply.submit">
@@ -280,40 +388,5 @@ export default function CreateNetworkView() {
 				</main>
 			</div>
 		</div>
-	);
-}
-
-function Sidebar() {
-	const {
-		state: { link_group, activeSection },
-	} = useContext(CreateEventPageCtx);
-	return (
-		<aside
-			id="projects_sidebar"
-			className="project-aside min-w-[200px] hidden lg:block sticky top-headerP"
-		>
-			{/* container Section */}
-			<div className="space-y-12 ">
-				{link_group.map((group, index) => (
-					<section className="space-y-4" key={index}>
-						<h1 className="font-bold text-agrey-700 dark:text-white">{group.title}</h1>
-						<ul className="list-none ">
-							{group.links.map((link, idx2) => (
-								<li className="" key={idx2}>
-									<button
-										onClick={link.onClick}
-										className={`prj-aside-button ${
-											idx2 === activeSection && 'active'
-										}`}
-									>
-										{link.name}
-									</button>
-								</li>
-							))}
-						</ul>
-					</section>
-				))}
-			</div>
-		</aside>
 	);
 }

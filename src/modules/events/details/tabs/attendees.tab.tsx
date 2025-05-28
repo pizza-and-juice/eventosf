@@ -1,21 +1,14 @@
 import { useContext } from 'react';
 
-// services
-import ModalSvcContext from '@shared/services/modal/modal.context';
-
 // static
 import { EventDetailsPageCtx } from '../events-details.context';
 
 export default function AttendeesTab() {
 	const {
-		state,
 		queries: { eventQuery },
 	} = useContext(EventDetailsPageCtx);
-	const modalSvc = useContext(ModalSvcContext);
 
 	const { data: eventData, isLoading: eventLoading, isError: eventError } = eventQuery;
-
-	function openImgModal(imgs: string[], idx: number) {}
 
 	// if (dappIddle) {
 	// 	return <div></div>;

@@ -1,3 +1,4 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 // third party
 import { useContext } from 'react';
 
@@ -22,7 +23,7 @@ import dateToText from '@shared/utils/formatters';
 export default function EventsDetailsView() {
 	const userSvc = useContext(UserSvcContext);
 
-	const { state, fn, queries } = useContext(EventDetailsPageCtx);
+	const { state, queries } = useContext(EventDetailsPageCtx);
 
 	const { eventQuery } = queries;
 
