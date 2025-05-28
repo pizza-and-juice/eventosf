@@ -1,4 +1,4 @@
-import { type MemoryStorage } from '../models/global/momory-storage.model';
+import { MemoryStorage } from '@shared/types';
 
 const storage: { [key: string]: any } = {};
 

@@ -1,19 +1,20 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useContext, useState } from 'react';
 
-import Button from 'src/components/internal/button/button.component';
+// services
+import SettingsService from '@shared/services/settings/settings.service';
+import SettingsSvcContext from '@shared/services/settings/settings.context';
+import AuthSvcContext from '@shared/services/auth/auth.context';
+import ModalSvcContext from '@shared/services/modal/modal.context';
+import UserSvcContext from '@shared/services/user/user.context';
 
+// components
+import Button from '@components/internal/button/button.component';
+import ImagoTipo from '@components/logos/pwr-imagotipo/pwr-imagotipo.logo';
+
+// static
 import ROUTES from '@static/router.data';
-import GeneralSettingsService from 'src/shared/services/general-settings/general-settings.service';
-import geneneralSettingsSvcContext from 'src/shared/services/general-settings/general-settings.context';
-
-import ImagoTipo from 'src/components/logos/pwr-imagotipo/pwr-imagotipo.logo';
-import AuthSvcContext from 'src/shared/services/auth/auth.context';
-import ModalService from 'src/shared/services/modal/modal.service';
-import ModalSvcContext from 'src/shared/services/modal/modal.context';
-import APP_MODALS from 'src/static/enums/app.modals';
-import UserService from 'src/shared/services/user/user.service';
-import UserSvcContext from 'src/shared/services/user/user.context';
+import APP_MODALS from '@static/enums/app.modals';
 
 const navBttns = [{ label: 'Eventos', href: ROUTES.events.root }];
 
@@ -21,8 +22,9 @@ export default function HeaderComponent() {
 	// *~~~ inject dependencies ~~~* //
 
 	const authSvc = useContext(AuthSvcContext);
-	const userSvc = useContext<UserService>(UserSvcContext);
-	const modalSvc = useContext<ModalService>(ModalSvcContext);
+	const userSvc = useContext(UserSvcContext);
+	const modalSvc = useContext(ModalSvcContext);
+	const settingsSvc = useContext(SettingsSvcContext);
 
 	// const navigate = useNavigate();
 	const { pathname } = useLocation();
@@ -31,28 +33,29 @@ export default function HeaderComponent() {
 
 	const toggleMobileNav = () => {
 		setMobileNavOpen(!mobileNavOpen);
-		// const html = document.querySelector('html');
-
-		// if (mobileNavOpen) {
-		// 	html?.classList.remove('overflow-hidden');
-		// } else {
-		// 	html?.classList.add('overflow-hidden');
-		// }
 	};
-
-	// *~~~ Theme ~~~* //
-	const settingsSvc = useContext<GeneralSettingsService>(geneneralSettingsSvcContext);
 
 	function toggleTheme() {
 		settingsSvc.toggleTheme();
 	}
 
 	function openLoginModal() {
-		modalSvc.open(APP_MODALS.LOGIN_MODAL);
+		modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
 	}
 
-	function logout() {
-		authSvc.logout();
+	const [loggingOut, setLoggingOut] = useState(false);
+
+	async function logout() {
+		setLoggingOut(true);
+
+		try {
+			await authSvc.logout();
+		} catch (error) {
+			console.error('Error during logout:', error);
+		} finally {
+			setLoggingOut(false);
+			// navigate(ROUTES.root);
+		}
 	}
 
 	return (
@@ -113,13 +116,16 @@ export default function HeaderComponent() {
 									/>
 								</Link>
 
-								<button className="navbar-link" onClick={logout}>
-									Log Out
+								<button
+									className={`navbar-link bbttnn  ${loggingOut && 'loading'}`}
+									onClick={logout}
+								>
+									Cerrar sesión
 								</button>
 							</>
 						) : (
 							<button className="navbar-link" onClick={openLoginModal}>
-								Log In
+								Iniciar sesión
 							</button>
 						)}
 
@@ -130,18 +136,17 @@ export default function HeaderComponent() {
 							<div className="dark:text-white">
 								<i
 									className={`fa-if fas fa-${
-										settingsSvc.getTheme() === 'light' ? 'moon ' : 'sun-bright'
+										settingsSvc.theme === 'light' ? 'moon ' : 'sun-bright'
 									}`}
 								></i>
 							</div>
 						</button>
 
-						<Button
-							className="blue small hover:scale-105 transition duration-300 ease-in-out"
-							href={ROUTES.grantApply}
-						>
-							Request Grant
-						</Button>
+						<Link to={ROUTES.events.create}>
+							<Button className="blue small hover:scale-105 transition duration-300 ease-in-out">
+								Crear evento
+							</Button>
+						</Link>
 					</div>
 
 					<div className="burger-button md:hidden flex">

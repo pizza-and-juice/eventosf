@@ -1,116 +1,123 @@
 import { ReactNode, useState } from 'react';
 
-// import { getCustomerSession, login2, logout2, registerAction } from '@lib/data/customer';
+// data-fetching
+import api from '@modules/data-fetching/api';
 import { LoginDto, RegisterDto } from '@modules/data-fetching/dto/auth.dto';
 
-import { APP_EVENTS } from '@static/enums/app.events';
-import { UserData } from '@shared/models/user/user.model';
-import api from '@modules/data-fetching/api';
-
 import AuthSvcContext from './auth.context';
+
+// static
+import { APP_EVENTS } from '@static/enums/app.events';
+
+// shared
 import { Role } from '@shared/enums/user-enums';
+import { AppStorage, UserData } from '@shared/types';
+import STORAGE_KEYS from '@static/storage.keys';
 
 export interface IAuthService {
 	isLoggedIn: boolean;
-	access_token: string;
 	register(dto: RegisterDto): void;
-	login(email: string, password: string): Promise<void>;
+	login(dto: LoginDto): Promise<void>;
 	logout(): Promise<void>;
-	restoreSession(isLoggedIn: boolean): Promise<void>;
+	restoreSession(): Promise<void>;
 }
 
-export default function AuthServiceComponent({ children }: { children: ReactNode }) {
+type Props = {
+	storage: AppStorage;
+	children: ReactNode;
+};
+
+export default function AuthServiceComponent({ children, storage }: Props) {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [access_token, setAccessToken] = useState('');
 
 	async function register(dto: RegisterDto): Promise<void> {
-		await api.auth.register(dto);
+		const res = await api.auth.register(dto);
+
+		const user = {
+			id: res.user.id,
+			email: res.user.email,
+			name: res.user.name,
+			pfp: res.user.pfp,
+			role: res.user.role,
+		};
+
+		const token = res.token.access_token;
+		storage.set(STORAGE_KEYS.auth_session, token);
+
+		const loggedInEvent = new CustomEvent<UserData>(APP_EVENTS.AUTH_LOGGED_IN, {
+			detail: user,
+		});
+		document.dispatchEvent(loggedInEvent);
+
 		setIsLoggedIn(true);
 	}
 
-	async function login(email: string, password: string): Promise<void> {
-		try {
-			const dto: LoginDto = {
-				email,
-				password,
-			};
+	async function login(dto: LoginDto): Promise<void> {
+		const res = await api.auth.login(dto);
 
-			await api.auth.login(dto);
+		const user = {
+			id: res.user.id,
+			email: res.user.email,
+			name: res.user.name,
+			pfp: res.user.pfp,
+			role: res.user.role,
+		};
 
-			// const user = await getCustomerSession();
-			const user = {
-				id: '123',
-				email: 'example@gmail.com',
-				first_name: 'John',
-				last_name: 'Doe',
-				pfp: 'https://example.com/pfp.jpg',
-				role: Role.USER,
-			};
+		const token = res.token.access_token;
+		storage.set(STORAGE_KEYS.auth_session, token);
 
-			const loggedInEvent = new CustomEvent<UserData>(APP_EVENTS.AUTH_LOGGED_IN, {
-				detail: {
-					id: user.id,
-					email: user.email,
-					first_name: user.first_name || 'Unkown User',
-					last_name: user.last_name || 'Unkown User',
-					pfp: user.pfp || '',
-					role: user.role,
-				},
-			});
-			document.dispatchEvent(loggedInEvent);
+		const loggedInEvent = new CustomEvent<UserData>(APP_EVENTS.AUTH_LOGGED_IN, {
+			detail: user,
+		});
+		document.dispatchEvent(loggedInEvent);
 
-			setIsLoggedIn(true);
-		} catch (err) {
-			console.error('Login failed:', err);
-		}
+		setIsLoggedIn(true);
 	}
 
 	async function logout(): Promise<void> {
 		try {
 			await api.auth.logout(); // Asegurarse de que logout2() no tenga errores silenciosos
-
+		} catch (err) {
+			console.error('Logout failed:', err);
+		} finally {
 			const loggedOutEvent = new CustomEvent(APP_EVENTS.AUTH_LOGGED_OUT);
 			document.dispatchEvent(loggedOutEvent);
 
+			storage.remove(STORAGE_KEYS.auth_session);
+
 			setIsLoggedIn(false);
-		} catch (err) {
-			console.error('Logout failed:', err);
 		}
 	}
 
-	async function restoreSession(isUserLoggedIn: boolean): Promise<void> {
-		if (isUserLoggedIn) {
+	async function restoreSession(): Promise<void> {
+		const token = storage.get<string>(STORAGE_KEYS.auth_session);
+
+		if (token) {
 			try {
+				const res = await api.auth.session();
 				const user = {
-					id: '123',
-					email: 'example@gmail.com',
-					first_name: 'John',
-					last_name: 'Doe',
-					pfp: 'https://example.com/pfp.jpg',
-					role: Role.USER,
+					id: res.user.id,
+					email: res.user.email,
+					name: res.user.name,
+					pfp: res.user.pfp,
+					role: res.user.role as Role,
 				};
 				const loggedInEvent = new CustomEvent<UserData>(APP_EVENTS.AUTH_LOGGED_IN, {
-					detail: {
-						id: user.id,
-						email: user.email,
-						first_name: user.first_name || 'Unkown User',
-						last_name: user.last_name || 'Unkown User',
-						pfp: user.pfp || '',
-						role: user.role,
-					},
+					detail: user,
 				});
 
 				document.dispatchEvent(loggedInEvent);
 				setIsLoggedIn(true);
 			} catch (err) {
-				return;
+				console.error('Failed to restore session:', err);
+				storage.remove(STORAGE_KEYS.auth_session);
+				setIsLoggedIn(false);
 			}
 		}
 	}
 
 	// Definir el contexto de forma reactiva dentro del render
 	const ctx: IAuthService = {
-		access_token,
 		isLoggedIn,
 		register,
 		login,

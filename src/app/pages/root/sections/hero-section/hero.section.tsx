@@ -1,12 +1,17 @@
 import { useContext } from 'react';
-import Button from 'src/components/internal/button/button.component';
-import GeneralSettingsService from 'src/shared/services/general-settings/general-settings.service';
-import geneneralSettingsSvcContext from 'src/shared/services/general-settings/general-settings.context';
-import { THEMES } from 'src/static/settings/general-settings.data';
-import ROUTES from 'src/static/router.data';
+import { Link } from 'react-router-dom';
+
+// components
+import Button from '@components/internal/button/button.component';
+
+// services
+import SettingsSvcContext from '@shared/services/settings/settings.context';
+
+// static
+import ROUTES from '@static/router.data';
 
 export default function HeroSection() {
-	const settingsSvc = useContext<GeneralSettingsService>(geneneralSettingsSvcContext);
+	const settingsSvc = useContext(SettingsSvcContext);
 
 	return (
 		<section className="relative h-screen z-[1] cursor-default">
@@ -15,16 +20,12 @@ export default function HeroSection() {
 				<img
 					src="media/landing/banner-dark.png"
 					alt=""
-					className={`max-h-[500px] ${
-						settingsSvc.getTheme() === THEMES.LIGHT && 'hidden'
-					}`}
+					className={`max-h-[500px] ${settingsSvc.theme === 'light' && 'hidden'}`}
 				/>
 				<img
 					src="media/landing/banner-light.png"
 					alt=""
-					className={`max-h-[500px] ${
-						settingsSvc.getTheme() === THEMES.DARK && 'hidden'
-					}`}
+					className={`max-h-[500px] ${settingsSvc.theme === 'dark' && 'hidden'}`}
 				/>
 			</div>
 
@@ -40,13 +41,11 @@ export default function HeroSection() {
 				</h2>
 				{/* button div */}
 				<div className="flex justify-center ">
-					<Button
-						className="blue w-[200px] hover:scale-105 transition duration-300 ease-in-out"
-						href={ROUTES.grantApply}
-						tag_type="link"
-					>
-						Apply Now
-					</Button>
+					<Link to={ROUTES.events.create}>
+						<Button className="blue w-[200px] hover:scale-105 transition duration-300 ease-in-out">
+							Comenzar
+						</Button>
+					</Link>
 				</div>
 			</div>
 		</section>

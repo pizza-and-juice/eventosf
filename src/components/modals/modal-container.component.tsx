@@ -1,16 +1,15 @@
 import { useContext } from 'react';
 
-import './modal-container.scss';
+import ModalSvcContext from '@shared/services/modal/modal.context';
 
-import ModalSvcContext from 'src/shared/services/modal/modal.context';
-import ModalService from 'src/shared/services/modal/modal.service';
+import './modal-container.scss';
 
 type ModalContainerProps = {
 	children: React.ReactNode;
 };
 
 export default function ModalContainer({ children }: ModalContainerProps) {
-	const modalSvc = useContext<ModalService>(ModalSvcContext);
+	const modalSvc = useContext(ModalSvcContext);
 
 	function closeCurrentModal() {
 		modalSvc.closeCurrentModal();

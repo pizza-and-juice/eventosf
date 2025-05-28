@@ -24,6 +24,7 @@ export type ContactModalData = {
 
 export type ModalDataMap = {
 	[APP_MODALS.LOGIN_MODAL]: null;
+	[APP_MODALS.REGISTER_MODAL]: null;
 	[APP_MODALS.EXAMPLE_MODAL]: null;
 	[APP_MODALS.CONTACT_MODAL]: ContactModalData;
 };

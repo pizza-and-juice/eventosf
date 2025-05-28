@@ -1,6 +1,8 @@
 const STORAGE_KEYS = {
 	// settings
-	generalSettings: 'app.generalSettings',
+	settings: {
+		theme: 'app.settings.theme',
+	},
 
 	// auth
 	auth_session: 'app.auth.session',

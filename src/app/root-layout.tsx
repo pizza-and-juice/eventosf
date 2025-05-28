@@ -4,9 +4,8 @@ import { ToastContainer } from 'react-toastify';
 import { Route, BrowserRouter, Routes, useLocation } from 'react-router-dom';
 
 // context components
-import ContextComponent from '@components/composed/app-context.component';
+import AppContext from '@components/composed/app-context.component';
 import AppInit from '@components/composed/app-init.component';
-
 import ModalContainer from '@components/modals/modal-container.component';
 
 // layout
@@ -17,25 +16,26 @@ import AuthRequiredLayout from '@modules/layout/auth-required.layout';
 import NotFoundPage from '@app/pages/not-found/404.page';
 
 import LandingPage from '@app/pages/root/root.page';
+
 import EventsPage from '@app/pages/events/root/events.page';
+import EventsDetailsPage from './pages/events/detalis/events-details.page';
 import CreateEventPage from '@app/pages/events/create/create-event.page';
 
+// services
+import SettingsSvcContext from '@shared/services/settings/settings.context';
 import ModalSvcContext from 'src/shared/services/modal/modal.context';
-import { ModalData } from 'src/shared/models/modals/modals.model';
-// import FaqPage from './FAQs/faqs-page';
-
-import GeneralSettingsService from 'src/shared/services/general-settings/general-settings.service';
-import geneneralSettingsSvcContext from 'src/shared/services/general-settings/general-settings.context';
 
 // static
 import APP_MODALS from '@static/enums/app.modals';
-import { THEMES } from 'src/static/settings/general-settings.data';
 import ROUTES from '@static/router.data';
 
 // styles
 import 'react-toastify/dist/ReactToastify.css';
 import 'src/scss/globals.scss';
-import EventsDetailsPage from './pages/events/detalis/events-details.page';
+
+// modules
+import { ModalData } from '@modules/modals/modals.types';
+import { Toast } from 'node_modules/react-toastify/dist/components';
 
 // prettier-ignore
 const ProjectDetailsPage = lazy(() => import('./(projects-layout)/projects/details/project-details[id].page'));
@@ -78,14 +78,8 @@ function RoutingComponent() {
 
 					<Route path={ROUTES.root} element={<LandingPage />} />
 
-					{/* login */}
-					{/* <Route path={ROUTES.loginModal} element={<LoginModalPage />} /> */}
-
 					{/* profile */}
 					<Route path={ROUTES.profile.root} element={<ProfilePage />} />
-
-					{/* project */}
-					<Route path={ROUTES.projects.details} element={<ProjectDetailsPage />} />
 
 					{/* events */}
 					<Route path={ROUTES.events.root} element={<EventsPage />} />
@@ -120,6 +114,7 @@ function AppModals() {
 	} = {
 		// [APP_MODALS.EXAMPLE_MODAL]: ExampleModal,
 		[APP_MODALS.LOGIN_MODAL]: lazy(() => import('@modules/modals/auth/login.modal')),
+		[APP_MODALS.REGISTER_MODAL]: lazy(() => import('@modules/modals/auth/register.modal')),
 		[APP_MODALS.CONTACT_MODAL]: lazy(() => import('@modules/modals/contact/contact.modal')),
 	};
 
@@ -138,11 +133,14 @@ function AppModals() {
 	);
 }
 
-export default function RootLayout() {
-	const settingsSvc = useContext<GeneralSettingsService>(geneneralSettingsSvcContext);
+function AppToaster() {
+	const settingsSvc = useContext(SettingsSvcContext);
+	return <ToastContainer theme={settingsSvc.theme} />;
+}
 
+export default function RootLayout() {
 	return (
-		<ContextComponent>
+		<AppContext>
 			<AppInit>
 				<BrowserRouter>
 					<Suspense fallback={<div></div>}>
@@ -150,13 +148,10 @@ export default function RootLayout() {
 					</Suspense>
 
 					<ScrollToTop />
-
-					<ToastContainer
-						theme={settingsSvc.getTheme() === THEMES.DARK ? 'dark' : 'light'}
-					/>
+					<AppToaster />
 					<AppModals />
 				</BrowserRouter>
 			</AppInit>
-		</ContextComponent>
+		</AppContext>
 	);
 }

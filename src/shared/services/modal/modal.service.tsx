@@ -60,18 +60,21 @@ export default function ModalServiceComponent({ children }: { children: ReactNod
 	}
 
 	function open<K extends keyof ModalDataMap>(modalId: K, data: ModalDataMap[K]) {
-		if (modals.some((m) => m.id === modalId)) return;
+		setModals((prev) => {
+			if (prev.some((m) => m.id === modalId)) return prev;
 
-		const newModals: ModalData[] = [...modals, { id: modalId, show: true, data }];
-		setModals(newModals);
-		emitModalsChanged(newModals);
+			const newModals = [...prev, { id: modalId, show: true, data }];
+			emitModalsChanged(newModals);
+			return newModals;
+		});
 	}
 
 	function closeModal(modalId: APP_MODALS) {
-		const updated = modals.filter((m) => m.id !== modalId);
-
-		setModals(updated);
-		emitModalsChanged(updated);
+		setModals((prev) => {
+			const updated = prev.filter((m) => m.id !== modalId);
+			emitModalsChanged(updated);
+			return updated;
+		});
 	}
 
 	function closeCurrentModal() {

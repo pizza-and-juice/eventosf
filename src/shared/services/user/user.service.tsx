@@ -1,9 +1,12 @@
-'use client';
-
-import { UserData } from '@shared/models/user/user.model';
+// third party
 import React, { useState } from 'react';
+
+// context
 import UserSvcContext from './user.context';
+
+// shared
 import { Role } from '@shared/enums/user-enums';
+import { UserData } from '@shared/types';
 
 export interface IUserService {
 	setUserData(userData: UserData): void;
@@ -15,8 +18,7 @@ export default function UserServiceComponent({ children }: { children: React.Rea
 	const [_userData, _setUserData] = useState<UserData>({
 		id: '',
 		email: '',
-		first_name: '',
-		last_name: '',
+		name: '',
 		pfp: '',
 		role: Role.NULL,
 	});

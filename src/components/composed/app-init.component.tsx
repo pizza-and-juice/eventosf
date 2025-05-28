@@ -1,5 +1,3 @@
-// import { InitialData } from '@shared/models/global/initial-data.model';
-
 // third party
 import { useContext, useEffect, useState } from 'react';
 
@@ -9,17 +7,31 @@ import UserSvcContext from '@shared/services/user/user.context';
 
 // static
 import { APP_EVENTS } from '@static/enums/app.events';
-import { UserData } from '@shared/models/user/user.model';
+
+// shared
+import { Theme, UserData } from '@shared/types';
+import { Role } from '@shared/enums/user-enums';
+import SettingsSvcContext from '@shared/services/settings/settings.context';
+import settings_eventChannel from '@shared/instances/settings.event-channel';
 
 type AppInitProps = {
 	children: React.ReactNode;
 };
+
+function LoadingComponent() {
+	return (
+		<div className="flex items-center justify-center h-screen bg-white dark:bg-dark-800">
+			<div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 "></div>
+		</div>
+	);
+}
 
 export default function AppInit({ children }: AppInitProps) {
 	// #region deps
 
 	const authSvc = useContext(AuthSvcContext);
 	const userSvc = useContext(UserSvcContext);
+	const settingsSvc = useContext(SettingsSvcContext);
 
 	// #endregion
 
@@ -33,7 +45,15 @@ export default function AppInit({ children }: AppInitProps) {
 
 			// *~~~ auth ~~~* //
 
-			// await genSettingsSvc.init();
+			function onThemeChanged(e: CustomEvent<Theme>) {
+				const html = document.querySelector('html')!;
+				html.classList.remove('light', 'dark');
+				html.classList.add(e.detail);
+			}
+
+			settings_eventChannel.addEventListener('themeChanged', onThemeChanged as EventListener);
+
+			settingsSvc.init();
 
 			// *~~~ user ~~~* //
 
@@ -51,17 +71,16 @@ export default function AppInit({ children }: AppInitProps) {
 				userSvc.setUserData({
 					id: '',
 					email: '',
-					first_name: '',
-					last_name: '',
+					name: '',
 					pfp: '',
-					role: null,
+					role: Role.NULL,
 				});
 			}
 
 			document.addEventListener(APP_EVENTS.AUTH_LOGGED_OUT, onLoggedOut as EventListener);
 
 			// await authSvc.init();
-			await authSvc.restoreSession(false);
+			await authSvc.restoreSession();
 
 			// *~~~ html head ~~~* //
 
@@ -74,7 +93,7 @@ export default function AppInit({ children }: AppInitProps) {
 			link.crossOrigin = 'anonymous';
 			document.head.appendChild(link);
 
-			// setAppLoaded(true);
+			setAppLoaded(true);
 		}
 
 		init();
@@ -83,7 +102,7 @@ export default function AppInit({ children }: AppInitProps) {
 	}, []);
 
 	// TODO: add loading screen
-	// if (!appLoaded) return <LoadingComponent />;
+	if (!appLoaded) return <LoadingComponent />;
 
 	// if (process.env.NODE_ENV === "development") {
 	// 	return (

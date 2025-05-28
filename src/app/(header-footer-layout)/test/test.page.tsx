@@ -1,13 +1,12 @@
 import { useContext } from 'react';
 import ModalSvcContext from 'src/shared/services/modal/modal.context';
-import ModalService from 'src/shared/services/modal/modal.service';
 import APP_MODALS from 'src/static/enums/app.modals';
 
 export default function TEstPage() {
-	const modalSvc = useContext<ModalService>(ModalSvcContext);
+	const modalSvc = useContext(ModalSvcContext);
 
 	function openModal() {
-		modalSvc.open(APP_MODALS.SESSION_EXPIRED);
+		modalSvc.open(APP_MODALS.REGISTER_MODAL, null);
 	}
 
 	return (

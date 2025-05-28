@@ -24,9 +24,11 @@ type ModalProps = {
 const schema = z.object({
 	email: z.string().nonempty('Campo requerido').email('email incorrecto'),
 	password: z.string().nonempty('Campo requerido'),
+	firstName: z.string().nonempty('Campo requerido'),
+	lastName: z.string().nonempty('Campo requerido'),
 });
 
-export default function LoginModal({ modalId }: ModalProps) {
+export default function RegisterModal({ modalId }: ModalProps) {
 	const modalRef = useRef<HTMLDivElement>(null);
 
 	const authSvc = useContext(AuthSvcContext);
@@ -85,14 +87,16 @@ export default function LoginModal({ modalId }: ModalProps) {
 	}
 
 	const [globalError, setGlobalError] = useState<string | null>(null);
-	async function login() {
+	async function registerUser() {
 		const values = form.getValues();
 		setGlobalError(null);
 
 		try {
-			await authSvc.login({
+			await authSvc.register({
 				email: values.email,
 				password: values.password,
+				first_name: values.firstName,
+				last_name: values.lastName,
 			});
 			close();
 			navigate(ROUTES.root);
@@ -101,10 +105,10 @@ export default function LoginModal({ modalId }: ModalProps) {
 		}
 	}
 
-	async function openRegisterModal() {
+	async function openLoginModal() {
 		await close();
 		setTimeout(() => {
-			modalSvc.open(APP_MODALS.REGISTER_MODAL, null);
+			modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
 		}, 10);
 	}
 
@@ -126,7 +130,7 @@ export default function LoginModal({ modalId }: ModalProps) {
 					className="flex items-start justify-between p-4 border-b rounded-t"
 				>
 					<h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-						Iniciar sesión
+						Crear cuenta
 					</h3>
 					<button
 						type="button"
@@ -145,8 +149,49 @@ export default function LoginModal({ modalId }: ModalProps) {
 				<section id="modal-body" className="p-6 space-y-6">
 					<div className="flex justify-center">
 						<div className="w-[60%] ">
-							<form className="w-full space-y-6" onSubmit={handleSubmit(login)}>
+							<form
+								className="w-full space-y-6"
+								onSubmit={handleSubmit(registerUser)}
+							>
 								<div className="space-y-5">
+									<div className="field">
+										<label className="text-sm text-agrey-700">Nombre *</label>
+										<div className="form-control">
+											<input
+												type="text"
+												className={`text-field ${
+													errors.firstName && 'invalid'
+												}`}
+												placeholder=" "
+												{...register('firstName')}
+											/>
+										</div>
+										{errors.firstName && (
+											<div className="text-red-500 text-sm ">
+												{errors.firstName.message}
+											</div>
+										)}
+									</div>
+
+									<div className="field">
+										<label className="text-sm text-agrey-700">Apellido *</label>
+										<div className="form-control">
+											<input
+												type="text"
+												className={`text-field ${
+													errors.lastName && 'invalid'
+												}`}
+												placeholder=" "
+												{...register('lastName')}
+											/>
+										</div>
+										{errors.lastName && (
+											<div className="text-red-500 text-sm ">
+												{errors.lastName.message}
+											</div>
+										)}
+									</div>
+
 									<div className="field">
 										<label className="text-sm text-agrey-700">Email *</label>
 										<div className="form-control">
@@ -213,7 +258,7 @@ export default function LoginModal({ modalId }: ModalProps) {
 										isSubmitting && 'loading'
 									}`}
 								>
-									Iniciar sesión
+									Crear cuenta
 								</Button>
 							</form>
 						</div>
@@ -222,10 +267,10 @@ export default function LoginModal({ modalId }: ModalProps) {
 					<br />
 
 					<div className="text-center ">
-						Aun no tienes una cuenta?{' '}
-						<button onClick={openRegisterModal}>
+						Ya tienes una cuenta?{' '}
+						<button onClick={openLoginModal}>
 							<span className="underline" data-testid="register-button">
-								Registrate
+								Iniciar sesión
 							</span>
 						</button>
 						.

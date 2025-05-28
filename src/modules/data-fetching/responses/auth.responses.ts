@@ -1,14 +1,12 @@
 import { Role } from '@shared/enums/user-enums';
 
 export type RegisterResponse = {
-	accessToken: string;
 	user: {
 		id: string;
 		email: string;
 		pfp: string;
-		username: string;
+		name: string;
 		role: Role;
-		createdAt: string;
 	};
 	token: {
 		access_token: string;
@@ -21,9 +19,8 @@ export type LoginResponse = {
 		id: string;
 		email: string;
 		pfp: string;
-		username: string;
+		name: string;
 		role: Role;
-		created_at: string;
 	};
 	token: {
 		access_token: string;
@@ -40,8 +37,7 @@ export type SessionResponse = {
 		id: string;
 		email: string;
 		pfp: string;
-		username: string;
+		name: string;
 		role: Role;
-		created_at: string;
 	};
 };
