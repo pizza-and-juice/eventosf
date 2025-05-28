@@ -1,14 +1,44 @@
-import { ListEventsResponse } from '@modules/data-fetching/responses/events.responses';
-import { UseQueryResult } from '@tanstack/react-query';
+// third party
 import { createContext } from 'react';
+import { UseQueryResult } from '@tanstack/react-query';
+
+// data-fetching
+import { ListEventsResponse } from '@modules/data-fetching/responses/events.responses';
+import { ListUserEventsIdsResponse } from '@modules/data-fetching/responses/user-events.responses';
+
+// shared
+import { SortEventsBy } from '@shared/enums/sort-events.enum';
+import { FilterEvents } from '@shared/enums/events-filter.enum';
+import { UseFormReturn } from 'react-hook-form';
+import { SearchEventsSchema } from '@app/pages/events/root/search.schema';
 
 export type EventsPageCtxType = {
-	state: {};
+	form: UseFormReturn<SearchEventsSchema, unknown, unknown>;
 
-	fn: {};
+	state: {
+		sidebar_data: {
+			title: string;
+			links: {
+				name: string;
+				value: any;
+				onClick: () => void;
+			}[];
+		}[];
+		sortBy: SortEventsBy;
+		filters: {
+			status: FilterEvents;
+		};
+	};
+
+	fn: {
+		changePage(newPage: number): void;
+		deleteResults(): void;
+	};
 
 	queries: {
 		eventsQuery: UseQueryResult<ListEventsResponse, Error>;
+		searchQuery: UseQueryResult<ListEventsResponse, Error>;
+		attendingEventsQuery: UseQueryResult<ListUserEventsIdsResponse, Error>;
 	};
 
 	// mutations: {

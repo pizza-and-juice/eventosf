@@ -6,7 +6,6 @@ import {
 import endpoints from './endpoints';
 import { faker } from '@faker-js/faker';
 import { EventStatus } from '@shared/enums/networks-enum';
-import axios from 'axios';
 
 if (import.meta.env.VITE_APP_ENV === 'DEV') {
 	// =====================================
@@ -42,12 +41,12 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 		},
 	};
 
-	mock.onGet(endpoints.user_events.list).reply(200, res_1);
+	mock.onGet(endpoints.user_events.list_attending).reply(200, res_1);
 
 	// =====================================
 	// List User Events Registered IDs Response
 	// =====================================
-	mock.onGet(endpoints.user_events.list_registered_ids).reply((config) => {
+	mock.onGet(endpoints.user_events.list_attending_ids).reply((config) => {
 		const { event_ids } = config.params as { event_ids: string[] };
 		if (!event_ids || !Array.isArray(event_ids) || event_ids.length === 0) {
 			return [400, 'Event IDs are required'];
@@ -62,7 +61,6 @@ type ReqParams = {
 	limit?: number;
 	offset?: number;
 	status?: EventStatus;
-	created_by?: string;
 };
 
 type Req2Params = {
@@ -70,20 +68,20 @@ type Req2Params = {
 };
 
 const userEventsApi = {
-	async list(params: ReqParams): Promise<ListUserEventsResponse> {
+	async list_attending(params: ReqParams): Promise<ListUserEventsResponse> {
 		const res = await axios_m<ListUserEventsResponse>({
 			method: 'GET',
-			url: endpoints.user_events.list,
+			url: endpoints.user_events.list_attending,
 			params,
 		});
 
 		return res.data;
 	},
 
-	async list_registered_ids(params: Req2Params): Promise<ListUserEventsIdsResponse> {
+	async list_attending_ids(params: Req2Params): Promise<ListUserEventsIdsResponse> {
 		const res = await axios_m<ListUserEventsIdsResponse>({
 			method: 'GET',
-			url: endpoints.user_events.list_registered_ids,
+			url: endpoints.user_events.list_attending_ids,
 			params,
 		});
 

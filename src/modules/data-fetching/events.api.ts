@@ -11,6 +11,7 @@ import { CreateEventDto } from './dto/events.dto';
 
 import { faker } from '@faker-js/faker';
 import { EventStatus } from '@shared/enums/networks-enum';
+import { FilterEvents } from '@shared/enums/events-filter.enum';
 
 if (import.meta.env.VITE_APP_ENV === 'DEV') {
 	// =====================================
@@ -111,11 +112,19 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 	mock.onDelete(/\/events\/([a-f0-9-]+)/).reply(200, res_5);
 }
 
+type ListParams = {
+	limit?: number;
+	offset?: number;
+	search?: string;
+	status?: FilterEvents;
+};
+
 const eventsApi = {
-	async list(): Promise<ListEventsResponse> {
+	async list(params: ListParams): Promise<ListEventsResponse> {
 		const res = await axios_m<ListEventsResponse>({
 			method: 'GET',
 			url: endpoints.events.list,
+			params,
 		});
 
 		return res.data;

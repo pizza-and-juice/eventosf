@@ -73,9 +73,9 @@ export default function EventsDetailsPage() {
 	const [userRegistered, setUserRegistered] = useState(false);
 
 	const userRegistrationQuery = useQuery({
-		queryKey: [QUERY_KEYS.LIST_USER_REGISTERED_EVENTS_IDS, userSvc.getUserData().id, eventId],
+		queryKey: [QUERY_KEYS.LIST_USER_ATTENDING_EVENTS_IDS, userSvc.getUserData().id, eventId],
 		queryFn: () =>
-			api.user_events.list_registered_ids({
+			api.user_events.list_attending_ids({
 				event_ids: [eventId],
 			}),
 		enabled: authSvc.isLoggedIn || true,

@@ -7,14 +7,10 @@ import './pagination.scss';
 // pages start form 0
 type PaginationProps = {
 	metadata: {
-		totalPages: number;
-		currentPage: number;
-		itemsPerPage: number;
-		totalItems: number;
-		nextPage: number; // -1 if no next page
-		previousPage: number; // -1 if no previous page
-		startIndex: number; // 0 based
-		endIndex: number;
+		items_per_page: number;
+		total_items: number;
+		current_page: number;
+		total_pages: number;
 	};
 	onPageChange: (page: number) => void;
 };
@@ -22,8 +18,9 @@ type PaginationProps = {
 export default function Pagination({ metadata, onPageChange }: PaginationProps) {
 	const isSmallScreen = false; //useMediaQuery('(max-width: 704px)');
 
-	const totalPages = metadata.totalPages;
-	const currentPage = metadata.currentPage;
+	const totalPages = metadata.total_pages;
+	const currentPage = metadata.current_page;
+
 	let buttonsToShow = 5; // number of buttons to show, including ellipsis
 	if (isSmallScreen) {
 		buttonsToShow = 2;
@@ -33,6 +30,7 @@ export default function Pagination({ metadata, onPageChange }: PaginationProps) 
 	let endPage = totalPages;
 
 	// *~~*~~*~~ handle ellipsis ~~*~~*~~* //
+
 	if (totalPages > buttonsToShow) {
 		const half = Math.floor(buttonsToShow / 2);
 		if (currentPage <= half) {
@@ -51,22 +49,20 @@ export default function Pagination({ metadata, onPageChange }: PaginationProps) 
 	}
 
 	// *~~~ handle clicks ~~~* //
-	// #region
+	// #region handle clicks
 	function loadPrevPage() {
-		if (metadata.previousPage >= 0) {
-			onPageChange(metadata.previousPage);
+		if (metadata.current_page > 0) {
+			onPageChange(metadata.current_page - 1);
 		}
-		window.scrollTo(0, 0);
 	}
 	function loadNextPage() {
-		if (metadata.nextPage > 0) {
-			onPageChange(metadata.nextPage);
+		if (metadata.current_page < metadata.total_pages) {
+			onPageChange(metadata.current_page + 1);
 		}
-		window.scrollTo(0, 0);
 	}
+
 	function handlePageClick(pageNumber: number) {
 		onPageChange(pageNumber);
-		window.scrollTo(0, 0);
 	}
 	// #endregion
 
@@ -87,16 +83,18 @@ export default function Pagination({ metadata, onPageChange }: PaginationProps) 
 	// }
 
 	// *~~*~~*~~ render buttons ~~*~~*~~* //
+	// #regon render buttons
 
 	// create buttons
 	const pageButtons = [];
+
 	for (let i = firstPage; i < endPage; i++) {
 		// console.log('This is the total NUMBER OF ITEMS', metadata.totalItems);
 		pageButtons.push(
 			<button
 				key={i}
-				onClick={() => handlePageClick(i)}
-				className={`pagination-btn ${metadata.currentPage === i && 'active'}`}
+				onClick={() => handlePageClick(i + 1)}
+				className={`pagination-btn ${metadata.current_page === i + 1 && 'active'}`}
 			>
 				{i + 1}
 			</button>
@@ -136,13 +134,18 @@ export default function Pagination({ metadata, onPageChange }: PaginationProps) 
 		);
 	}
 
+	// #endregion
+
 	return (
 		<div className="pagination">
 			{/* total results */}
 			<div>
 				<h1 className="text-agrey-900 dark:text-white text-sm font-medium">
-					<span className="md:block hidden">Results: </span> {metadata.startIndex + 1} -{' '}
-					{metadata.endIndex} of {metadata.totalItems}
+					<span className="md:block hidden">Results: </span>{' '}
+					{(metadata.current_page - 1) * metadata.items_per_page} -{' '}
+					{(metadata.current_page - 1) * metadata.items_per_page +
+						metadata.items_per_page}{' '}
+					of {metadata.total_items}
 				</h1>
 			</div>
 
@@ -152,7 +155,7 @@ export default function Pagination({ metadata, onPageChange }: PaginationProps) 
 				<button
 					onClick={loadPrevPage}
 					className="prev-button"
-					disabled={metadata.previousPage === -1}
+					disabled={metadata.current_page === 1}
 				>
 					<i className="far fa-angle-left fa-lg"></i>
 				</button>
@@ -167,7 +170,9 @@ export default function Pagination({ metadata, onPageChange }: PaginationProps) 
 				<button
 					onClick={loadNextPage}
 					className="next-button"
-					disabled={metadata.nextPage === -1}
+					disabled={
+						metadata.current_page === metadata.total_pages || metadata.total_pages === 0
+					}
 				>
 					<i className="far fa-angle-right fa-lg"></i>
 				</button>

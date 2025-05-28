@@ -1,222 +1,169 @@
-import { useContext, useEffect, useState } from 'react';
+// third party
+import { useContext, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { ProjectSorting } from 'src/static/enums/projectsSorting.enums';
-import { Signal, signal } from '@preact/signals-react';
-import { DeploymentType } from 'src/static/enums/projects-deployment.enum';
+// module
 import EventsView from '@modules/events/root/events.view';
-import { EventsPageCtx, EventsPageCtxType } from '../../../../modules/events/root/events.context';
+import { EventsPageCtx, EventsPageCtxType } from '@modules/events/root/events.context';
+
+// data-fethching
+import api from '@modules/data-fetching/api';
+
+// services
 import DocTitleSvcContext from '@shared/services/doc-title/doc-title.context';
 import AuthSvcContext from '@shared/services/auth/auth.context';
 import UserSvcContext from '@shared/services/user/user.context';
-import ModalSvcContext from '@shared/services/modal/modal.context';
-import LayoutSvcContext from '@shared/services/layout/layout.context';
-import { MultipleProjectsModel } from '@shared/models/projects/project.model';
-import { useFormik } from 'formik';
+
+// shared
 import { useDebounce } from '@shared/hooks/use-debounce.hook';
+import { FilterEvents } from '@shared/enums/events-filter.enum';
+import { SortEventsBy } from '@shared/enums/sort-events.enum';
+
+// static
 import QUERY_KEYS from '@static/query.keys';
-import QueryApi from '@shared/api/query-api';
-import { onUpvoteMutate_ProjectsList } from '@shared/api/mutations/upvote.mutation';
-import { toast } from 'react-toastify';
-import APP_MODALS from '@static/enums/app.modals';
-import { useQuery } from '@tanstack/react-query';
-import api from '@modules/data-fetching/api';
 
-// class PageHandler {
-// 	private typeFilter: Signal<string> = signal(DeploymentType.ALL);
-// 	private sortFilter: Signal<string> = signal(ProjectSorting.SORT_BY_DATE);
-
-// 	// *~~~ getters ~~~* //
-
-// 	getTypeFilter() {
-// 		return this.typeFilter.value;
-// 	}
-
-// 	getSortFilter() {
-// 		return this.sortFilter.value;
-// 	}
-
-// 	// *~~~ setters ~~~* //
-// 	setTypeFilter(type: DeploymentType) {
-// 		this.typeFilter.value = type;
-// 	}
-
-// 	setSortFilter(sortType: ProjectSorting) {
-// 		this.sortFilter.value = sortType;
-// 	}
-// }
+// schemas
+import { searchEventsSchema } from './search.schema';
+import queryClient from '@shared/instances/query-client.instance';
 
 export default function EventsPage() {
 	//#region dependencies
-	useContext(DocTitleSvcContext).setTitle('Projects');
+	useContext(DocTitleSvcContext).setTitle('Proximos eventos');
 	const authSvc = useContext(AuthSvcContext);
 	const userSvc = useContext(UserSvcContext);
-	const modalSvc = useContext(ModalSvcContext);
 
-	const layoutSvc = useContext(LayoutSvcContext);
 	// const pageHandler = useContext(ctx);
 	// #endregion
 
 	// #region search form
 
-	const [searchResults, setSearchResults] = useState<MultipleProjectsModel[]>([]);
-
-	const formik = useFormik({
-		initialValues: {
+	const form = useForm({
+		resolver: zodResolver(searchEventsSchema),
+		defaultValues: {
 			search: '',
 		},
-		onSubmit: async (values) => {
-			if (values.search === '') {
-				return;
-			}
-
-			searchProjectMutation.mutate(values.search);
-		},
 	});
-	const value = useDebounce(formik.values.search, 500);
 
-	useEffect(() => {
-		if (value === '') {
-			deleteResults();
-			return;
-		}
+	const { watch } = form;
 
-		searchProjectMutation.mutate(value);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [value]);
+	const searchDebValue = useDebounce(watch('search'), 500);
 
 	function deleteResults() {
-		formik.setFieldValue('search', '');
-		setSearchResults([]);
-	}
-
-	const { handleSubmit, getFieldProps } = formik;
-	// #endregion
-
-	// #region
-
-	function openProjectQV(id: number) {
-		layoutSvc.openProjectQV(id);
-	}
-
-	function openProjectQVComments(id: number) {
-		layoutSvc.openProjectQV(id, PROJECT_QV_TABS.comments);
+		form.reset({ search: '' });
+		queryClient.setQueryData([QUERY_KEYS.LIST_EVENTS + '_SEARCH', searchDebValue], undefined);
 	}
 	// #endregion
 
-	// *~~~  http reqs ~~~* //
+	// #region sidebar
+
+	const [filters, setFilters] = useState({
+		status: FilterEvents.INCOMING,
+	});
+
+	const [sortBy, setSortBy] = useState<SortEventsBy>(SortEventsBy.CREATED_AT);
+
+	const sidebar_data = [
+		{
+			title: 'Ordenar por',
+			links: [
+				{
+					name: 'Fecha',
+					value: SortEventsBy.CREATED_AT,
+					onClick: () => {
+						setSortBy(SortEventsBy.CREATED_AT);
+					},
+				},
+			],
+		},
+		{
+			title: 'Filtrar por',
+			links: [
+				{
+					name: 'Todos',
+					value: FilterEvents.ALL,
+					onClick: () => {
+						setFilters({ status: FilterEvents.ALL });
+					},
+				},
+				{
+					name: 'Proximos',
+					value: FilterEvents.INCOMING,
+					onClick: () => {
+						setFilters({ status: FilterEvents.INCOMING });
+					},
+				},
+				{
+					name: 'Concluidos',
+					value: FilterEvents.COMPLETED,
+					onClick: () => {
+						setFilters({ status: FilterEvents.COMPLETED });
+					},
+				},
+			],
+		},
+	];
+
+	// #endregion
+
 	// #region http reqs
-	// const filters = {
-	// 	deploymentType: pageHandler.getTypeFilter(),
-	// 	sortType: pageHandler.getSortFilter(),
-	// };
 
 	const [page, setPage] = useState<number>(0);
 
 	// GET projects
 	const eventsQuery = useQuery({
-		queryKey: [QUERY_KEYS.LIST_EVENTS, page /*filters*/],
-		queryFn: () => api.events.list(),
+		queryKey: [QUERY_KEYS.LIST_EVENTS, page, filters],
+		queryFn: () =>
+			api.events.list({
+				status: filters.status,
+			}),
 	});
 
-	// GET user upvotes
-	// const {
-	// 	data: upvotesData,
-	// 	isLoading: userUpvotesLoading,
-	// 	isError: userUpvotesError,
-	// } = useQuery(
-	// 	[QUERY_KEYS.GET_USER_ALL_UPVOTES, userSvc.getUserData().id],
-	// 	() => QueryApi.user.getUpvotedProjects(userSvc.getUserData().id),
-	// 	{
-	// 		enabled: authSvc.isLoggedIn,
-	// 	}
-	// );
+	const searchQuery = useQuery({
+		queryKey: [QUERY_KEYS.LIST_EVENTS + '_SEARCH', searchDebValue],
+		queryFn: () => api.events.list({ search: searchDebValue }),
+		enabled: !!searchDebValue,
+	});
 
-	// GET search results
-	// const searchProjectMutation = useMutation({
-	// 	mutationFn: (search: string) => QueryApi.projects.searchProjects(search),
-
-	// 	onSuccess: (data) => {
-	// 		setSearchResults(data);
-	// 	},
-
-	// 	onError: () => {
-	// 		toast.error('Error fetching search results');
-	// 	},
-	// });
-
-	// POST upvote
-	// const postUpvoteMutation = useMutation({
-	// 	mutationFn: (prjctId: number) =>
-	// 		QueryApi.projects.addUpvote(userSvc.getUserData().id, prjctId),
-
-	// 	// optimistic update to have a better performance
-	// 	onMutate: (prjctId: number) =>
-	// 		onUpvoteMutate_ProjectsList({
-	// 			projectId: prjctId,
-	// 			userId: userSvc.getUserData().id,
-	// 			page,
-	// 			filters,
-	// 			operation: 1,
-	// 		}),
-
-	// 	onError: () => {
-	// 		toast.error('Error upvoting project');
-	// 		// postUpvoteMutation.reset();
-	// 	},
-	// });
-
-	// DELETE upvote
-	// const delUpvoteMutation = useMutation({
-	// 	mutationFn: (prjctId: number) =>
-	// 		QueryApi.projects.delUpvote(userSvc.getUserData().id, prjctId),
-
-	// 	onMutate: (prjctId: number) =>
-	// 		onUpvoteMutate_ProjectsList({
-	// 			projectId: prjctId,
-	// 			userId: userSvc.getUserData().id,
-	// 			page,
-	// 			filters,
-	// 			operation: 0,
-	// 		}),
-
-	// 	onError: () => {
-	// 		delUpvoteMutation.reset();
-	// 		toast.error('Error removing upvote from project');
-	// 	},
-	// });
+	const attendingEventsQuery = useQuery({
+		queryKey: [
+			QUERY_KEYS.LIST_USER_ATTENDING_EVENTS_IDS,
+			userSvc.getUserData().id,
+			eventsQuery.data?.events.map((e) => e.id),
+		],
+		queryFn: () =>
+			api.user_events.list_attending_ids({
+				event_ids: eventsQuery.data?.events.map((e) => e.id) || [],
+			}),
+		enabled: authSvc.isLoggedIn && !!eventsQuery.data?.events.length,
+	});
 
 	// #endregion
 
-	// *~~~ functions (related to http req) ~~~* //
 	// #region
 
 	function changePage(newPage: number) {
 		setPage(newPage);
 	}
 
-	// function isProjectUpvoted(projectId: number) {
-	// 	return !authSvc.isLoggedIn
-	// 		? false
-	// 		: upvotesData!.upvotedProjects.some((p) => p.id === projectId);
-	// }
-
-	// async function handleUpvoteBtnClick(projectId: number, isUpvoted: boolean) {
-	// 	if (!authSvc.isLoggedIn) {
-	// 		modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
-	// 		return;
-	// 	}
-
-	// 	const toggle = isUpvoted ? delUpvoteMutation.mutateAsync : postUpvoteMutation.mutateAsync;
-
-	// 	await toggle(projectId);
-	// }
-
 	const ctx: EventsPageCtxType = {
-		fn: {},
+		form,
+
+		fn: {
+			changePage,
+			deleteResults,
+		},
 		queries: {
 			eventsQuery,
+			searchQuery,
+			attendingEventsQuery,
 		},
-		state: {},
+		state: {
+			sidebar_data,
+			filters,
+			sortBy,
+		},
 	};
 
 	return (
