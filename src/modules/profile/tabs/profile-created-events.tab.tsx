@@ -1,9 +1,17 @@
-import QUERY_KEYS from '@static/query.keys';
-import { useQuery } from '@tanstack/react-query';
+// third party
 import { useContext } from 'react';
+import { useQuery } from '@tanstack/react-query';
+
+// static
+import QUERY_KEYS from '@static/query.keys';
+
+// components
+import EventCard from '@components/composed/event-card.component';
+
 import { ProfilePageCtx } from '../profile.context';
+
+// fata fetching
 import api from '@modules/data-fetching/api';
-import ProjectComponent from '@components/not-reusable/project/project.nr-component';
 
 export default function ProfileCreatedEventsTab() {
 	const { state } = useContext(ProfilePageCtx);
@@ -11,11 +19,8 @@ export default function ProfileCreatedEventsTab() {
 	const { userId } = state;
 
 	const userEventsQuery = useQuery({
-		queryKey: [QUERY_KEYS.LIST_USER_REGISTERED_EVENTS, userId, `created_by_${userId}`],
-		queryFn: () =>
-			api.user_events.list({
-				created_by: state.userId,
-			}),
+		queryKey: [QUERY_KEYS.LIST_USER_CREATED_EVENTS, userId, `created_by_${userId}`],
+		queryFn: () => api.events.list({ created_by: userId }),
 	});
 
 	const { data: userEvents, isLoading: userEventsLoading, isError } = userEventsQuery;
@@ -36,20 +41,15 @@ export default function ProfileCreatedEventsTab() {
 				<ul className="list-none space-y-2">
 					{userEvents!.events.map((e, idx) => (
 						<li key={idx}>
-							<ProjectComponent
-								isUpvoted={false}
+							<EventCard
 								id={e.id}
-								imageSrc={e.image}
 								title={e.title}
-								description={e.subtitle}
-								categories={[]}
-								upvotes={0}
-								onCheckClick={() => {}}
-								onUpvoteClick={() => {}}
-								onCommentClick={() => {}}
-								renderUpvote
-								renderComments
-								totalComments={0}
+								subtitle={e.subtitle}
+								image={e.image}
+								attendees_capacity={e.attendees_capacity}
+								confirmed_attendees={e.attendees}
+								speakers={e.speakers}
+								isRegistered={false}
 							/>
 						</li>
 					))}

@@ -10,13 +10,14 @@ export default function GrantSection() {
 				{/* grant overviwe con */}
 				<div className="space-y-8">
 					<h1 className="text-2xl sm:text-4xl lg:text-[56px] text-center font-bold text-black dark:text-white">
-						Support Overview
+						Mas de 100,000 eventos creados
 					</h1>
 					<p className="text-center text-base sm:text-2xl text-black dark:text-white ">
-						The only limit is your imagination. With the freedom to code in your{' '}
-						<br className="hidden md:block" /> preferred language, you can create like
-						no one else can. Get creative, <br className="hidden md:block" /> build
-						something valuable, something you truly believe in.
+						¡Únete a nuestra comunidad de creadores de eventos y comparte tus
+						experiencias con el mundo! Aquí encontrarás inspiración, recursos y una
+						plataforma para hacer realidad tus ideas. Desde eventos pequeños hasta
+						grandes conferencias, estamos aquí para ayudarte a crear momentos
+						inolvidables.
 					</p>
 				</div>
 

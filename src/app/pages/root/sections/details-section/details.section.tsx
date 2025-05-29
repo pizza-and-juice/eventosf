@@ -1,6 +1,7 @@
 import ROUTES from 'src/static/router.data';
 import './more-grant.css';
 import Button from 'src/components/internal/button/button.component';
+import { Link } from 'react-router-dom';
 
 function FeatureBox({ children, className }: { children: React.ReactNode; className?: string }) {
 	return (
@@ -26,20 +27,20 @@ export default function DetailsSection() {
 						{/* text con */}
 						<div className="space-y-6">
 							<h1 className="text-2xl sm:text-4xl font-bold text-black dark:text-white">
-								More Grant Tiers
+								Crea tu evento
 							</h1>
 							<p className=" text-black dark:text-agrey-400">
-								More funding options coming soon to help you scale your ambitious
-								ideas.
+								Tan solo tienes que seguir estos pasos para empezar a ser parte de
+								mis eventos
 							</p>
 
-							<Button
-								className="blue small w-[150px] hover:scale-105 transition duration-300 ease-in-out"
-								tag_type="link"
-								href={ROUTES.grantApply}
-							>
-								Apply Now
-							</Button>
+							<br />
+
+							<Link to={ROUTES.events.create}>
+								<Button className="blue small w-[150px] hover:scale-105 transition duration-300 ease-in-out">
+									Comenzar
+								</Button>
+							</Link>
 						</div>
 					</FeatureBox>
 				</div>
@@ -55,13 +56,11 @@ export default function DetailsSection() {
 
 								<div className="space-y-2">
 									<h5 className="text-xl font-medium text-black dark:text-white">
-										Pitch your idea
+										Crear una cuenta
 									</h5>
 									<h6 className="text-agrey-700 dark:text-agrey-400">
-										Complete the grant application form to receive feedback
-										fast. Your application stands the chance to garner upvotes
-										from the PWR community, serving as an indicator for
-										approval.
+										Para comenzar, crea una cuenta en nuestra plataforma. Una
+										vez registrado, podrás enviar tu propuesta de evento.
 									</h6>
 								</div>
 							</FeatureBox>
@@ -74,11 +73,11 @@ export default function DetailsSection() {
 
 								<div className="space-y-2">
 									<h5 className="text-xl font-medium text-black dark:text-white">
-										Start Building
+										Crea tu evento
 									</h5>
 									<h6 className="text-agrey-700 dark:text-agrey-400">
-										Upon approval, it's time to start building! Aim to deliver
-										the Minimum Viable Product (MVP) within the next four weeks.
+										Completa el formulario de propuesta de evento, donde
+										describirás tu idea, el formato del evento.
 									</h6>
 								</div>
 							</FeatureBox>
@@ -91,12 +90,12 @@ export default function DetailsSection() {
 
 								<div className="space-y-2">
 									<h5 className="text-xl font-medium text-black dark:text-white">
-										Get Support
+										Obten actualizaciónes
 									</h5>
 									<h6 className="text-agrey-700 dark:text-agrey-400">
-										After successfully delivering the MVP, you will receive the
-										grant, opening the door to potential additional funding
-										support from the PWR network.
+										Una vez que tu propuesta sea revisada por los usuarios,
+										empezarás a recibir actualizaciones sobre el estado de tu
+										evento.
 									</h6>
 								</div>
 							</FeatureBox>

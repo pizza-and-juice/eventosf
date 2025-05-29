@@ -35,8 +35,6 @@ import 'src/scss/globals.scss';
 // modules
 import { ModalData } from '@modules/modals/modals.types';
 
-// prettier-ignore
-
 const TestPage = lazy(() => import('./pages/test/test.page'));
 const UiKitPage = lazy(() => import('./dev/ui-kit/ui-kit'));
 

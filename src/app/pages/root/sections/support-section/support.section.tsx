@@ -3,26 +3,26 @@ import './we-support.css';
 
 export default function SupportSection() {
 	const words = [
-		'ideas we love, ',
-		'dreams, ',
-		'passion, ',
-		'crazy, ',
-		'surprises,',
-		'possible, ',
-		'impossible, ',
-		'invention, ',
-		'reinvention, ',
-		'new,',
-		'freedom, ',
-		'guts, ',
-		'perseverance, ',
-		'independence, ',
-		'fun.',
+		'ideas que amamos, ',
+		'sueños, ',
+		'pasión, ',
+		'locura, ',
+		'sorpresas,',
+		'posible, ',
+		'imposible, ',
+		'invención, ',
+		'reinvención, ',
+		'nuevo,',
+		'libertad, ',
+		'valentía, ',
+		'perseverancia, ',
+		'independencia, ',
+		'diversión.',
 	];
 
 	return (
 		<section className="py-10 space-y-6 overflow-hidden cursor-default">
-			<h6 className="text-center text-2xl dark:text-white mb-[24px]">We support</h6>
+			<h6 className="text-center text-2xl dark:text-white mb-[24px]">Lo que nos mueve</h6>
 			{/* text div */}
 
 			<div className="relative  flex justify-center md:px-40">

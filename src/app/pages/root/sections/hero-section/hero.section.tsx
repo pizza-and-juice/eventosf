@@ -32,12 +32,11 @@ export default function HeroSection() {
 			{/* content */}
 			<div className="h-full flex flex-col justify-center gap-y-6 ">
 				<h1 className="text-center  font-bold text-2xl md:text-[56px] text-black  dark:text-white py-6">
-					Ready to Power Your Idea?
+					Crea tu evento
 				</h1>
 
 				<h2 className="text-center text-base md:text-2xl text-black dark:text-white">
-					We're on the lookout for groundbreaking ideas that spark{' '}
-					<br className="hidden md:block" /> transformation. Have something in mind?
+					¡Comienza a crear eventos increíbles y comparte tus experiencias con el mundo!
 				</h2>
 				{/* button div */}
 				<div className="flex justify-center ">

@@ -16,7 +16,7 @@ import QUERY_KEYS from '@static/query.keys';
 
 // data fetching
 import api from '@modules/data-fetching/api';
-import ProfileEventsTab from '@modules/profile/tabs/profile-events.tab';
+import ProfileAttendingEventsTab from '@modules/profile/tabs/profile-attending-events.tab';
 import ProfileCreatedEventsTab from '@modules/profile/tabs/profile-created-events.tab';
 
 export default function ProfilePage() {
@@ -52,7 +52,7 @@ export default function ProfilePage() {
 			onClick: () => {
 				setActiveTab(0);
 			},
-			Component: ProfileEventsTab,
+			Component: ProfileAttendingEventsTab,
 			admin: true,
 			self: false,
 		},

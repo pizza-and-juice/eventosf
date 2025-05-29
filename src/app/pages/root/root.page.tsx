@@ -18,7 +18,7 @@ import APP_MODALS from '@static/enums/app.modals';
 
 export default function LandingPage() {
 	const titleSvc = useContext<DocumentTitleService>(DocTitleSvcContext);
-	titleSvc.setTitle('Home');
+	titleSvc.setTitle('Inicio');
 
 	const modalSvc = useContext(ModalSvcContext);
 

@@ -117,6 +117,7 @@ type ListParams = {
 	offset?: number;
 	search?: string;
 	status?: FilterEvents;
+	created_by?: string;
 };
 
 const eventsApi = {

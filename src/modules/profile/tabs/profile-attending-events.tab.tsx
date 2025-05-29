@@ -5,15 +5,16 @@ import { useContext } from 'react';
 import { ProfilePageCtx } from '../profile.context';
 import api from '@modules/data-fetching/api';
 import ProjectComponent from '@components/not-reusable/project/project.nr-component';
+import EventCard from '@components/composed/event-card.component';
 
-export default function ProfileEventsTab() {
+export default function ProfileAttendingEventsTab() {
 	const { state } = useContext(ProfilePageCtx);
 
 	const { userId } = state;
 
 	const userEventsQuery = useQuery({
-		queryKey: [QUERY_KEYS.LIST_USER_REGISTERED_EVENTS, userId],
-		queryFn: () => api.user_events.list({}),
+		queryKey: [QUERY_KEYS.LIST_USER_ATTENDING_EVENTS, userId],
+		queryFn: () => api.user_events.list_attending({ limit: 10, offset: 0, userId }),
 	});
 
 	const { data: userEvents, isLoading: userEventsLoading, isError } = userEventsQuery;
@@ -25,7 +26,7 @@ export default function ProfileEventsTab() {
 	return (
 		<div className="space-y-4">
 			<h2 className="text-lg text-agrey-700 dark:text-agrey-400 font-medium">
-				Eventos registrados
+				Eventos en los que participas
 			</h2>
 
 			{userEventsLoading ? (
@@ -34,7 +35,18 @@ export default function ProfileEventsTab() {
 				<ul className="list-none space-y-2">
 					{userEvents!.events.map((e, idx) => (
 						<li key={idx}>
-							<ProjectComponent
+							<EventCard
+								id={e.id}
+								title={e.title}
+								subtitle={e.subtitle}
+								image={e.image}
+								attendees_capacity={e.attendees_capacity}
+								confirmed_attendees={e.attendees}
+								speakers={e.speakers}
+								isRegistered={true}
+							/>
+
+							{/* <ProjectComponent
 								isUpvoted={false}
 								id={e.id}
 								imageSrc={e.image}
@@ -48,7 +60,7 @@ export default function ProfileEventsTab() {
 								renderUpvote
 								renderComments
 								totalComments={0}
-							/>
+							/> */}
 						</li>
 					))}
 				</ul>

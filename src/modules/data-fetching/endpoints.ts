@@ -6,7 +6,7 @@ const endpoints = {
 	auth: {
 		register: `${_baseUrl}/auth/register`, // POST
 		login: `${_baseUrl}/auth/login`, // POST
-		logout: `${_baseUrl}/google-user/logout`, // POST
+		logout: `${_baseUrl}/auth/logout`, // POST
 		session: `${_baseUrl}/session`, // GET
 	},
 
@@ -32,14 +32,7 @@ const endpoints = {
 	user_events: {
 		list_attending: `${_baseUrl}/user-events/attending`, // GET
 		list_created: `${_baseUrl}/user-events/created`, // GET
-
-		list_attending_ids: `${_baseUrl}/user-events/registered-ids`, // GET
-	},
-
-	admin: {
-		users: {
-			list: `${_baseUrl}/admin/users`, // GET
-		},
+		list_attending_ids: `${_baseUrl}/user-events/attending-ids`, // GET
 	},
 };
 
