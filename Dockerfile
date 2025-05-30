@@ -18,4 +18,4 @@ RUN npm run build
 EXPOSE 4173
 
 # Comando para producción
-CMD ["npm", "run", "preview"]
+CMD ["npm", "run", "preview", "--", "--host"]

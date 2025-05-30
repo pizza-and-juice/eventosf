@@ -1,0 +1,28 @@
+# Node dependencies
+node_modules
+*.log
+
+# Build output (si no necesitas copiarlo desde local)
+dist
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Env files (solo si NO los usas dentro del contenedor)
+.env.local
+.env.*
+!*.env  # permite el .env principal si lo usas
+
+# Docker
+Dockerfile
+docker-compose.yml
+
+# IDE/editor folders
+.vscode
+.idea
+*.swp
