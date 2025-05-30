@@ -1,11 +1,11 @@
-import { Role } from '@shared/enums/user-enums';
+import { UserRole } from '@shared/enums/user-enums';
 
 export type RetrieveUserResponse = {
 	id: string;
 	name: string;
 	email: string;
 	pfp: string;
-	role: Role;
+	role: UserRole;
 };
 
 export type ListUsersResponse = {
@@ -14,7 +14,7 @@ export type ListUsersResponse = {
 		name: string;
 		email: string;
 		pfp: string;
-		role: Role;
+		role: UserRole;
 	};
 	metadata: {
 		items_per_page: number;

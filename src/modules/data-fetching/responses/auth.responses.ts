@@ -1,4 +1,4 @@
-import { Role } from '@shared/enums/user-enums';
+import { UserRole } from '@shared/enums/user-enums';
 
 export type RegisterResponse = {
 	user: {
@@ -6,7 +6,7 @@ export type RegisterResponse = {
 		email: string;
 		pfp: string;
 		name: string;
-		role: Role;
+		role: UserRole;
 	};
 	token: {
 		access_token: string;
@@ -20,7 +20,7 @@ export type LoginResponse = {
 		email: string;
 		pfp: string;
 		name: string;
-		role: Role;
+		role: UserRole;
 	};
 	token: {
 		access_token: string;
@@ -38,6 +38,6 @@ export type SessionResponse = {
 		email: string;
 		pfp: string;
 		name: string;
-		role: Role;
+		role: UserRole;
 	};
 };

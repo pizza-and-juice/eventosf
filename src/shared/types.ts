@@ -1,4 +1,4 @@
-import { Role } from '@shared/enums/user-enums';
+import { UserRole } from '@shared/enums/user-enums';
 
 export type Theme = 'light' | 'dark';
 
@@ -19,5 +19,5 @@ export type UserData = {
 	name: string;
 	pfp: string;
 	email: string;
-	role: Role;
+	role: UserRole;
 };

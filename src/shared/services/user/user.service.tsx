@@ -5,7 +5,7 @@ import React, { useState } from 'react';
 import UserSvcContext from './user.context';
 
 // shared
-import { Role } from '@shared/enums/user-enums';
+import { UserRole } from '@shared/enums/user-enums';
 import { UserData } from '@shared/types';
 
 export interface IUserService {
@@ -20,7 +20,7 @@ export default function UserServiceComponent({ children }: { children: React.Rea
 		email: '',
 		name: '',
 		pfp: '',
-		role: Role.NULL,
+		role: UserRole.NULL,
 	});
 
 	function setUserData(userData: UserData) {
@@ -32,7 +32,7 @@ export default function UserServiceComponent({ children }: { children: React.Rea
 	}
 
 	function isAdmin(): boolean {
-		return _userData.role === Role.ADMIN || _userData.role === Role.SUPERADMIN;
+		return _userData.role === UserRole.ADMIN || _userData.role === UserRole.SUPERADMIN;
 	}
 
 	const ctx: IUserService = {

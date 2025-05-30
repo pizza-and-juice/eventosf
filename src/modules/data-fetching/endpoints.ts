@@ -12,7 +12,7 @@ const endpoints = {
 
 	events: {
 		list: `${_baseUrl}/events/list`, // GET
-		retrieve: `${_baseUrl}/events/:id`, // GET
+		retrieve: `${_baseUrl}/events/retrieve/:id`, // GET
 		create: `${_baseUrl}/events/create`, // POST
 		update: `${_baseUrl}/events/:id`, // PUT
 		delete: `${_baseUrl}/events/:id`, // DELETE

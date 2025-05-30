@@ -11,7 +11,7 @@ import AuthSvcContext from './auth.context';
 import { APP_EVENTS } from '@static/enums/app.events';
 
 // shared
-import { Role } from '@shared/enums/user-enums';
+import { UserRole } from '@shared/enums/user-enums';
 import { AppStorage, UserData } from '@shared/types';
 import STORAGE_KEYS from '@static/storage.keys';
 
@@ -108,7 +108,7 @@ export default function AuthServiceComponent({ children, storage }: Props) {
 					email: res.user.email,
 					name: res.user.name,
 					pfp: res.user.pfp,
-					role: res.user.role as Role,
+					role: res.user.role as UserRole,
 				};
 				const loggedInEvent = new CustomEvent<UserData>(APP_EVENTS.AUTH_LOGGED_IN, {
 					detail: user,

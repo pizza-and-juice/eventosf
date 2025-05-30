@@ -1,4 +1,4 @@
-import { axios_, axios_m, mock } from '@shared/instances/axios';
+import { axios_, mock } from '@shared/instances/axios';
 import endpoints from './endpoints';
 import {
 	CreateEventResponse,
@@ -132,7 +132,7 @@ const eventsApi = {
 	},
 
 	async retrieve(id: string): Promise<RetrieveEventResponse> {
-		const res = await axios_m<RetrieveEventResponse>({
+		const res = await axios_<RetrieveEventResponse>({
 			method: 'GET',
 			url: endpoints.events.retrieve.replace(':id', id),
 		});
@@ -174,7 +174,7 @@ const eventsApi = {
 	},
 
 	async delete(id: string): Promise<DeleteEventResponse> {
-		const res = await axios_m<DeleteEventResponse>({
+		const res = await axios_<DeleteEventResponse>({
 			method: 'DELETE',
 			url: endpoints.events.delete.replace(':id', id),
 		});

@@ -10,7 +10,7 @@ import { APP_EVENTS } from '@static/enums/app.events';
 
 // shared
 import { Theme, UserData } from '@shared/types';
-import { Role } from '@shared/enums/user-enums';
+import { UserRole } from '@shared/enums/user-enums';
 import SettingsSvcContext from '@shared/services/settings/settings.context';
 import settings_eventChannel from '@shared/instances/settings.event-channel';
 
@@ -73,7 +73,7 @@ export default function AppInit({ children }: AppInitProps) {
 					email: '',
 					name: '',
 					pfp: '',
-					role: Role.NULL,
+					role: UserRole.NULL,
 				});
 			}
 

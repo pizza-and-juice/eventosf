@@ -8,7 +8,7 @@ import {
 } from './responses/auth.responses';
 import endpoints from './endpoints';
 import { faker } from '@faker-js/faker';
-import { Role } from '@shared/enums/user-enums';
+import { UserRole } from '@shared/enums/user-enums';
 
 if (import.meta.env.VITE_APP_ENV === 'DEV') {
 	// =====================================
@@ -25,7 +25,7 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
 			pfp: faker.image.avatar(),
-			role: Role.USER, // or 'ADMIN'
+			role: UserRole.USER, // or 'ADMIN'
 		},
 	};
 
@@ -45,7 +45,7 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
 			pfp: faker.image.avatar(),
-			role: Role.USER, // or 'ADMIN'
+			role: UserRole.USER, // or 'ADMIN'
 		},
 	};
 
@@ -67,7 +67,7 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 			email: faker.internet.email(),
 			name: faker.person.fullName(),
 			pfp: faker.image.avatar(),
-			role: Role.USER, // or 'ADMIN'
+			role: UserRole.USER, // or 'ADMIN'
 		},
 	};
 	mock.onGet(endpoints.auth.session).reply(200, res_3);

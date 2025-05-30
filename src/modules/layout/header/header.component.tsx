@@ -109,11 +109,16 @@ export default function HeaderComponent() {
 										userSvc.getUserData().id
 									)}
 								>
-									<img
-										src={userSvc.getUserData().pfp}
-										alt=""
-										className="w-8 h-8 rounded-full hover:scale-110 hover:shadow-lg transition duration-300 ease-in-out"
-									/>
+									<div className="flex gap-x-2 items-center">
+										<h2 className="text-agrey-900 dark:text-white  text-sm">
+											{userSvc.getUserData().name}
+										</h2>
+										<img
+											src={userSvc.getUserData().pfp}
+											alt=""
+											className="w-8 h-8 rounded-full hover:scale-110 hover:shadow-lg transition duration-300 ease-in-out"
+										/>
+									</div>
 								</Link>
 
 								<button
