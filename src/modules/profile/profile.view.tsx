@@ -1,12 +1,10 @@
 import { useContext } from 'react';
 import { ProfileCtxType, ProfilePageCtx } from './profile.context';
-import Button from '@components/internal/button/button.component';
 // import ProfileSkeleton from 'src/components/skeletons/profile/profile.skeleton';
 import { useDefaultUserImg } from '@shared/utils/functions';
 
 function Sidebar() {
 	const {
-		fn,
 		state: { tabs, activeTab, ownProfile },
 	} = useContext<ProfileCtxType>(ProfilePageCtx);
 

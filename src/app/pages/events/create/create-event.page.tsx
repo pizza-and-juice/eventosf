@@ -135,7 +135,6 @@ export default function CreateEventPage() {
 		return () => {
 			document.removeEventListener('keydown', onKey);
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [errors]);
 
 	// #endregion

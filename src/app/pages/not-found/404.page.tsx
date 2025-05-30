@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import Button from 'src/components/internal/button/button.component';
 import DocTitleSvcContext from 'src/shared/services/doc-title/doc-title.context';
 import DocumentTitleService from 'src/shared/services/doc-title/doc-title.service';
@@ -19,9 +20,10 @@ export default function NotFoundPage() {
 			<p className="mt-2 text-lg text-agrey-700 dark:text-agrey-400">
 				Please go back to the homepage.
 			</p>
-			<Button className="blue" tag_type="link" href={ROUTES.projects.root}>
-				Explore Projects
-			</Button>
+
+			<Link to={ROUTES.root} className="mt-6">
+				<Button className="blue">Explore Projects</Button>
+			</Link>
 		</div>
 	);
 }

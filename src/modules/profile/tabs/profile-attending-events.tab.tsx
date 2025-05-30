@@ -1,10 +1,8 @@
-import ProfilePage from '@app/(header-footer-layout)/profile/profile.page';
 import QUERY_KEYS from '@static/query.keys';
 import { useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
 import { ProfilePageCtx } from '../profile.context';
 import api from '@modules/data-fetching/api';
-import ProjectComponent from '@components/not-reusable/project/project.nr-component';
 import EventCard from '@components/composed/event-card.component';
 
 export default function ProfileAttendingEventsTab() {

@@ -29,8 +29,9 @@ export default function SettingsServiceComponent({ children, storage, event_chan
 		const theme = storage.get<Theme>(STORAGE_KEYS.settings.theme);
 
 		if (theme) {
-			setTheme(theme);
-			const event = new CustomEvent<Theme>('themeChanged', { detail: theme });
+			const _theme = theme as Theme;
+			setTheme(_theme);
+			const event = new CustomEvent<Theme>('themeChanged', { detail: _theme });
 			event_channel.dispatchEvent(event);
 		}
 	}

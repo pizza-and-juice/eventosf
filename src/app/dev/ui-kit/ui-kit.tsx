@@ -66,6 +66,8 @@ export default function UiKit() {
 		endIndex: 5,
 	};
 
+	console.log('Pagination Metadata:', paginationMetadata);
+
 	const handlePageChange = (page: any) => {
 		setCurrentPage(page);
 	};
@@ -311,7 +313,15 @@ export default function UiKit() {
 			<br />
 			<br />
 
-			<Pagination metadata={paginationMetadata} onPageChange={handlePageChange} />
+			<Pagination
+				metadata={{
+					current_page: 0,
+					items_per_page: 0,
+					total_items: 0,
+					total_pages: 0,
+				}}
+				onPageChange={handlePageChange}
+			/>
 
 			<br />
 			<br />

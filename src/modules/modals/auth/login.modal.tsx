@@ -15,7 +15,6 @@ import AuthSvcContext from '@shared/services/auth/auth.context';
 // static
 import APP_MODALS from '@static/enums/app.modals';
 import ROUTES from '@static/router.data';
-import { set } from 'date-fns';
 
 type ModalProps = {
 	modalId: APP_MODALS;

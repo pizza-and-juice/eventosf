@@ -1,5 +1,3 @@
-import { UserData } from '../models/user/user.model';
-
 export async function copyToClipboard(text: string) {
 	await navigator.clipboard.writeText(text);
 }

@@ -84,8 +84,8 @@ export default function EventsDetailsView() {
 
 										<div>
 											<h2 className="text-xs text-agrey-700 dark:text-agrey-400 font-medium ">
-												{dateToText(event?.start_date)} -{' '}
-												{dateToText(event?.end_date)}
+												{dateToText(event?.start_date ?? '')} -{' '}
+												{dateToText(event?.end_date ?? '')}
 											</h2>
 										</div>
 										<p className=" text-agrey-700 dark:text-agrey-400 whitespace-pre-line cursor-default">

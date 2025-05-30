@@ -1,8 +1,6 @@
-'use client';
-
 import { useContext, useEffect, useRef } from 'react';
 
-import Button from '@components/base/button/button.component';
+import Button from '@components/internal/button/button.component';
 import ModalSvcContext from '@shared/services/modal/modal.context';
 import APP_MODALS from '@static/enums/app.modals';
 
@@ -13,7 +11,7 @@ type ModalProps = {
 	data: null;
 };
 
-export default function ExampleModal({ modalId, data }: ModalProps) {
+export default function ExampleModal({ modalId }: ModalProps) {
 	const modalRef = useRef<HTMLDivElement>(null);
 
 	// 1. inject modalSvc
