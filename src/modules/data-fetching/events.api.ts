@@ -122,7 +122,7 @@ type ListParams = {
 
 const eventsApi = {
 	async list(params: ListParams): Promise<ListEventsResponse> {
-		const res = await axios_m<ListEventsResponse>({
+		const res = await axios_<ListEventsResponse>({
 			method: 'GET',
 			url: endpoints.events.list,
 			params,
@@ -141,10 +141,24 @@ const eventsApi = {
 	},
 
 	async create(dto: CreateEventDto): Promise<CreateEventResponse> {
-		const res = await axios_m<CreateEventResponse>({
+		// transform dto to form data
+		const formData = new FormData();
+		for (const key in dto) {
+			if (Object.prototype.hasOwnProperty.call(dto, key)) {
+				const value = dto[key as keyof CreateEventDto];
+				if (value !== undefined) {
+					formData.append(key, value as any);
+				}
+			}
+		}
+
+		const res = await axios_<CreateEventResponse>({
 			method: 'POST',
 			url: endpoints.events.create,
-			data: dto,
+			headers: {
+				'Content-Type': 'multipart/form-data',
+			},
+			data: formData,
 		});
 		return res.data;
 	},

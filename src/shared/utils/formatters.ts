@@ -37,6 +37,13 @@ export default function dateToText(date: string | number): string {
 	return format(new Date(timestamp * 1000), 'MMM dd yyyy');
 }
 
+export function dateToText2(date: string | number): string {
+	// mm/dd/yyyy
+	const timestamp = typeof date === 'string' ? Date.parse(date) / 1000 : date;
+	// -> MM/dd/yyyy
+	return format(new Date(timestamp * 1000), 'MM/dd/yyyy');
+}
+
 export function shortenAddress(address: string, chars = 4): string {
 	return `${address.substring(0, chars + 2)}...${address.substring(address.length - chars)}`;
 }

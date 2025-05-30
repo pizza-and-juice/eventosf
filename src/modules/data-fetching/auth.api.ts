@@ -1,4 +1,4 @@
-import { axios_, axios_m, mock } from '@shared/instances/axios';
+import { axios_, mock } from '@shared/instances/axios';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import {
 	LoginResponse,
@@ -75,7 +75,7 @@ if (import.meta.env.VITE_APP_ENV === 'DEV') {
 
 const authApi = {
 	async register(dto: RegisterDto): Promise<RegisterResponse> {
-		const res = await axios_m<RegisterResponse>({
+		const res = await axios_<RegisterResponse>({
 			method: 'POST',
 			url: endpoints.auth.register,
 			data: dto,
@@ -84,7 +84,7 @@ const authApi = {
 	},
 
 	async login(dto: LoginDto): Promise<LoginResponse> {
-		const res = await axios_m<LoginResponse>({
+		const res = await axios_<LoginResponse>({
 			method: 'POST',
 			url: endpoints.auth.login,
 			data: dto,
@@ -103,7 +103,7 @@ const authApi = {
 	},
 
 	async session(): Promise<SessionResponse> {
-		const res = await axios_m<SessionResponse>({
+		const res = await axios_<SessionResponse>({
 			method: 'GET',
 			url: endpoints.auth.session,
 		});

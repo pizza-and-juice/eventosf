@@ -3,6 +3,7 @@ import { ReactNode, useState } from 'react';
 // data-fetching
 import api from '@modules/data-fetching/api';
 import { LoginDto, RegisterDto } from '@modules/data-fetching/dto/auth.dto';
+import { axios_ } from '@shared/instances/axios';
 
 import AuthSvcContext from './auth.context';
 
@@ -66,12 +67,18 @@ export default function AuthServiceComponent({ children, storage }: Props) {
 		const token = res.token.access_token;
 		storage.set(STORAGE_KEYS.auth_session, token);
 
+		addtokentoHeaders(token); // Añadir el token a los headers de axios
+
 		const loggedInEvent = new CustomEvent<UserData>(APP_EVENTS.AUTH_LOGGED_IN, {
 			detail: user,
 		});
 		document.dispatchEvent(loggedInEvent);
 
 		setIsLoggedIn(true);
+	}
+
+	function addtokentoHeaders(token: string): void {
+		axios_.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 	}
 
 	async function logout(): Promise<void> {
@@ -94,6 +101,7 @@ export default function AuthServiceComponent({ children, storage }: Props) {
 
 		if (token) {
 			try {
+				addtokentoHeaders(token); // Añadir el token a los headers de axios
 				const res = await api.auth.session();
 				const user = {
 					id: res.user.id,

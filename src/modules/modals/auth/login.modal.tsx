@@ -97,7 +97,11 @@ export default function LoginModal({ modalId }: ModalProps) {
 			close();
 			navigate(ROUTES.root);
 		} catch (error: any) {
-			setGlobalError(error.message);
+			if (error?.response?.data?.detail.code === '401__AUTH__INVALID_CREDENTIALS') {
+				setGlobalError('Credenciales inválidas. Por favor, inténtalo de nuevo.');
+			} else {
+				setGlobalError(error.message);
+			}
 		}
 	}
 

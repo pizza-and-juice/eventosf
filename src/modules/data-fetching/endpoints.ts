@@ -7,13 +7,13 @@ const endpoints = {
 		register: `${_baseUrl}/auth/register`, // POST
 		login: `${_baseUrl}/auth/login`, // POST
 		logout: `${_baseUrl}/auth/logout`, // POST
-		session: `${_baseUrl}/session`, // GET
+		session: `${_baseUrl}/auth/session`, // GET
 	},
 
 	events: {
-		list: `${_baseUrl}/events`, // GET
+		list: `${_baseUrl}/events/list`, // GET
 		retrieve: `${_baseUrl}/events/:id`, // GET
-		create: `${_baseUrl}/events`, // POST
+		create: `${_baseUrl}/events/create`, // POST
 		update: `${_baseUrl}/events/:id`, // PUT
 		delete: `${_baseUrl}/events/:id`, // DELETE
 	},

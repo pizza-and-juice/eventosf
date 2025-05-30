@@ -30,6 +30,7 @@ import { CreateEventDto } from '@modules/data-fetching/dto/events.dto';
 import styles from './create-l1.module.css';
 import APP_MODALS from '@static/enums/app.modals';
 import { toast } from 'react-toastify';
+import { dateToText2 } from '@shared/utils/formatters';
 
 export default function CreateEventPage() {
 	// #region dependencies
@@ -83,8 +84,8 @@ export default function CreateEventPage() {
 			country: form.getValues('country'),
 			city: form.getValues('city'),
 			address: form.getValues('address'),
-			start_date: form.getValues('start_date'),
-			end_date: form.getValues('end_date'),
+			start_date: dateToText2(form.getValues('start_date')),
+			end_date: dateToText2(form.getValues('end_date')),
 
 			attendees_capacity: Number(form.getValues('attendees_capacity')),
 		};
