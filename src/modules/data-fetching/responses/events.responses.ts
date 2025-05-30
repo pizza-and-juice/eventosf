@@ -1,3 +1,4 @@
+import { EventRole } from '@shared/enums/event-role.enum';
 import { EventStatus } from '@shared/enums/networks-enum';
 
 export type ListEventsResponse = {
@@ -61,7 +62,7 @@ export type RetrieveEventResponse = {
 		name: string;
 		email: string;
 		pfp: string;
-		is_speaker: boolean;
+		attendee_role: EventRole;
 	}[];
 
 	host: {

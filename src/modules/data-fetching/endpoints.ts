@@ -15,24 +15,26 @@ const endpoints = {
 		retrieve: `${_baseUrl}/events/retrieve/:id`, // GET
 		create: `${_baseUrl}/events/create`, // POST
 		update: `${_baseUrl}/events/:id`, // PUT
-		delete: `${_baseUrl}/events/:id`, // DELETE
+		delete: `${_baseUrl}/events/delete/:id`, // DELETE
 	},
 
 	events_actions: {
-		register: `${_baseUrl}/events/:id/register`, // POST
-		unregister: `${_baseUrl}/events/:id/unregister`, // DELETE
+		register: `${_baseUrl}/event-actions/:id/register`, // POST
+		register_as_speaker: `${_baseUrl}/event-actions/:id/register-as-speaker`, // POST
+		unregister: `${_baseUrl}/event-actions/:id/unregister`, // DELETE
+		complete: `${_baseUrl}/event-actions/:id/complete`, // POST
 		attend: `${_baseUrl}/events/:id/attend`, // POST
 	},
 
 	user: {
 		list: `${_baseUrl}/users`, // GET
-		get: `${_baseUrl}/users/:id`, // GET
+		get: `${_baseUrl}/users/retrieve/:id`, // GET
 	},
 
 	user_events: {
 		list_attending: `${_baseUrl}/user-events/attending`, // GET
 		list_created: `${_baseUrl}/user-events/created`, // GET
-		list_attending_ids: `${_baseUrl}/user-events/attending-ids`, // GET
+		list_attending_ids: `${_baseUrl}/user-events/attending/ids`, // GET
 	},
 };
 

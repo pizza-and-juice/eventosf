@@ -107,7 +107,7 @@ export default function CreateNetworkView() {
 									<label className="text-xs  text-black dark:text-white">
 										Descripción del evento *
 									</label>
-									<h3>{watch('description')?.length} / 500</h3>
+									<h3>{watch('description')?.length} / 1000</h3>
 								</div>
 								<div className="form-control">
 									<textarea
@@ -298,7 +298,7 @@ export default function CreateNetworkView() {
 								<div className="form-control">
 									<input
 										type="text"
-										placeholder="Pais"
+										placeholder="Sitio web"
 										className={`text-field ${errors.website && 'invalid'}`}
 										{...register('website')}
 									/>

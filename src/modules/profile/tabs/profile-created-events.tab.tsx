@@ -20,7 +20,7 @@ export default function ProfileCreatedEventsTab() {
 
 	const userEventsQuery = useQuery({
 		queryKey: [QUERY_KEYS.LIST_USER_CREATED_EVENTS, userId, `created_by_${userId}`],
-		queryFn: () => api.events.list({ created_by: userId }),
+		queryFn: () => api.user_events.list_created({ user_id: userId }),
 	});
 
 	const { data: userEvents, isLoading: userEventsLoading, isError } = userEventsQuery;

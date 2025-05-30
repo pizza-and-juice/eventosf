@@ -159,10 +159,10 @@ export default function ProjectCover({
 							<div className="flex-grow min-w-0 sm:flex sm:justify-between sm:items-center space-y-1.5 sm:space-y-0">
 								<div className="space-y-2">
 									<h1 className="text-agrey-900 dark:text-white font-medium">
-										Add a project logo/cover
+										Agrega una imagen de portada
 									</h1>
 									<h2 className="text-sm text-agrey-700 dark:text-agrey-400 ">
-										Recommended 300 x 300
+										Maximo 300 x 300
 									</h2>
 								</div>
 								<Button
@@ -170,7 +170,7 @@ export default function ProjectCover({
 									type="button"
 									className="border dark:border-white border-black dark:text-white hover:border-ablue-300 transition-all duration-200 ease-in-out rounded-full flex justify-center items-center w-fit !h-[36px] px-6 py-1 !text-sm"
 								>
-									Upload Cover
+									Subir Portada
 								</Button>
 							</div>
 						</div>
@@ -185,7 +185,7 @@ export default function ProjectCover({
 							<div className="flex justify-center items-center w-[64px] h-[64px] bg-light-700 dark:bg-dark-700">
 								<Spinner />
 							</div>
-							<h2 className="text-sm text-agrey-700">Uploading...</h2>
+							<h2 className="text-sm text-agrey-700">Cargando...</h2>
 						</div>
 					</div>
 				);
@@ -206,7 +206,7 @@ export default function ProjectCover({
 										{reduceFileName(fileData!.name)}
 									</h1>
 									<h2 className="text-sm text-agrey-700 dark:text-agrey-400 ">
-										Recommended 300 x 300
+										Maximo 300 x 300
 									</h2>
 								</div>
 
@@ -224,7 +224,7 @@ export default function ProjectCover({
 										type="button"
 										className="border dark:border-white border-black dark:text-white hover:border-ablue-300 transition-all duration-200 ease-in-out rounded-full flex justify-center items-center w-fit !h-[36px] px-6 py-1 !text-sm"
 									>
-										Change Cover
+										Cambiar Portada
 									</Button>
 								</div>
 							</div>
@@ -245,10 +245,10 @@ export default function ProjectCover({
 								{/* right side */}
 								<div className="space-y-2">
 									<h1 className="text-agrey-900 dark:text-white font-medium">
-										Project cover
+										Imagen de Portada
 									</h1>
 									<h2 className="text-sm text-agrey-700 dark:text-agrey-400 ">
-										Recommended 300 x 300
+										Maximo 300 x 300
 									</h2>
 								</div>
 
@@ -266,7 +266,7 @@ export default function ProjectCover({
 										type="button"
 										className="border dark:border-white border-black dark:text-white hover:border-ablue-300 transition-all duration-200 ease-in-out rounded-full flex justify-center items-center w-fit !h-[36px] px-6 py-1 !text-sm"
 									>
-										Change Cover
+										Cambiar Portada
 									</Button>
 								</div>
 							</div>

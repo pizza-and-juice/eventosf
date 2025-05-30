@@ -3,14 +3,13 @@ import { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 
 import { RetrieveEventResponse } from '@modules/data-fetching/responses/events.responses';
 import { RegisterEventResponse } from '@modules/data-fetching/responses/events-actions.responses';
-import { ListUserEventsIdsResponse } from '@modules/data-fetching/responses/user-events.responses';
+import { ListUserAttendingEventsIdsResponse } from '@modules/data-fetching/responses/user-events.responses';
 
 type Tab = {
 	id: number;
 	label: string;
 	onClick(): void;
 	Component: () => JSX.Element;
-	adminOnly: boolean;
 };
 
 export type EventDetailsPageCtxType = {
@@ -26,6 +25,11 @@ export type EventDetailsPageCtxType = {
 			registerError: string | null;
 		};
 
+		registerAsSpeaker: {
+			registerAsSpeakerLoading: boolean;
+			registerAsSpeakerError: string | null;
+		};
+
 		unregister: {
 			unregisterLoading: boolean;
 			unregisterError: string | null;
@@ -39,6 +43,7 @@ export type EventDetailsPageCtxType = {
 
 	fn: {
 		onRegisterClick(): Promise<void>;
+		onRegisterAsSpeakerClick(): Promise<void>;
 		onUnregisterClick(): Promise<void>;
 		onDeleteClick(): Promise<void>;
 		openContactModal(): void;
@@ -46,7 +51,7 @@ export type EventDetailsPageCtxType = {
 
 	queries: {
 		eventQuery: UseQueryResult<RetrieveEventResponse, Error>;
-		userRegistrationQuery: UseQueryResult<ListUserEventsIdsResponse, Error>;
+		userAttendingEventsQuery: UseQueryResult<ListUserAttendingEventsIdsResponse, Error>;
 	};
 
 	requests: {

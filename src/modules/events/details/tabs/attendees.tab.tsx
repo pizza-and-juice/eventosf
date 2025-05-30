@@ -2,6 +2,9 @@ import { useContext } from 'react';
 
 // static
 import { EventDetailsPageCtx } from '../events-details.context';
+import { EventRole } from '@shared/enums/event-role.enum';
+import { Link } from 'react-router-dom';
+import ROUTES from '@static/router.data';
 
 export default function AttendeesTab() {
 	const {
@@ -67,7 +70,10 @@ export default function AttendeesTab() {
 										className="  bg-gray-100 py-2 px-4 rounded-lg dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition duration-300 ease-in-out "
 									>
 										<div className="flex justify-between items-center">
-											<div className="flex items-center gap-x-3">
+											<Link
+												to={ROUTES.profile.root.replace(':id', attendee.id)}
+												className="flex items-center gap-x-3"
+											>
 												<img
 													src={attendee.pfp}
 													alt=""
@@ -84,16 +90,26 @@ export default function AttendeesTab() {
 														{attendee.email}
 													</div>
 												</div>
-											</div>
+											</Link>
 
 											<div>
-												{attendee.is_speaker && (
+												{attendee.attendee_role === EventRole.SPEAKER && (
 													<div>
 														<span className="text-black dark:text-white">
 															<i className="fa-regular fa-microphone-stand" />
 														</span>
 														<span className="text-sm text-blue-500 ml-2">
 															Speaker
+														</span>
+													</div>
+												)}
+												{attendee.attendee_role === EventRole.ORGANIZER && (
+													<div>
+														<span className="text-black dark:text-white">
+															<i className="fa-solid fa-user-tie" />
+														</span>
+														<span className="text-sm text-blue-500 ml-2">
+															Anfitrión
 														</span>
 													</div>
 												)}

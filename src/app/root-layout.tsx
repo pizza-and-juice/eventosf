@@ -11,6 +11,7 @@ import ModalContainer from '@components/modals/modal-container.component';
 // layout
 import MainLayout from '@modules/layout/main.layout';
 import AuthRequiredLayout from '@modules/layout/auth-required.layout';
+import AdminRequiredLayout from '@modules/layout/admin-required.layout';
 
 // page
 import NotFoundPage from '@app/pages/not-found/404.page';
@@ -19,6 +20,7 @@ import EventsPage from '@app/pages/events/root/events.page';
 import EventsDetailsPage from '@app/pages/events/detalis/events-details.page';
 import CreateEventPage from '@app/pages/events/create/create-event.page';
 import ProfilePage from '@app/pages/profile/profile.page';
+import DashboardPage from './pages/dashboard/dashboard';
 
 // services
 import SettingsSvcContext from '@shared/services/settings/settings.context';
@@ -80,6 +82,15 @@ function RoutingComponent() {
 
 						{/* profile */}
 						<Route path={ROUTES.profile.root} element={<ProfilePage />} />
+					</Route>
+				</Route>
+
+				{/* admin */}
+
+				<Route element={<AdminRequiredLayout />}>
+					<Route element={<MainLayout />}>
+						{/* events */}
+						<Route path={ROUTES.dashboard.root} element={<DashboardPage />} />
 					</Route>
 				</Route>
 			</Routes>

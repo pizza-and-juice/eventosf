@@ -1,0 +1,5 @@
+export enum EventRole {
+	ORGANIZER = 'ORGANIZER',
+	SPEAKER = 'SPEAKER',
+	ATTENDEE = 'ATTENDEE',
+}

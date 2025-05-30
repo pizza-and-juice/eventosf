@@ -1,16 +1,15 @@
 import { useContext } from 'react';
 import { EventDetailsPageCtx } from '../events-details.context';
-import UserSvcContext from '@shared/services/user/user.context';
 
 export default function Sidebar() {
-	const userSvc = useContext(UserSvcContext);
-
 	const {
 		state: { tabs, activeTab },
 		queries: { eventQuery },
 	} = useContext(EventDetailsPageCtx);
 
-	const { data: event } = eventQuery;
+	const { data: eventData } = eventQuery;
+
+	const event = eventData!;
 
 	return (
 		<aside
@@ -25,10 +24,6 @@ export default function Sidebar() {
 					</h1>
 					<ul className="list-none ">
 						{tabs.map((tab, idx) => {
-							if (tab.adminOnly && !userSvc.isAdmin()) {
-								return null;
-							}
-
 							return (
 								<li className="" key={idx}>
 									<button

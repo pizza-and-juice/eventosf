@@ -35,4 +35,4 @@ export type ListUserEventsResponse = {
 	};
 };
 
-export type ListUserEventsIdsResponse = string[];
+export type ListUserAttendingEventsIdsResponse = string[];

@@ -2,7 +2,6 @@ import { Link, useLocation } from 'react-router-dom';
 import { useContext, useState } from 'react';
 
 // services
-import SettingsService from '@shared/services/settings/settings.service';
 import SettingsSvcContext from '@shared/services/settings/settings.context';
 import AuthSvcContext from '@shared/services/auth/auth.context';
 import ModalSvcContext from '@shared/services/modal/modal.context';

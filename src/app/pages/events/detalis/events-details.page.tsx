@@ -72,26 +72,33 @@ export default function EventsDetailsPage() {
 	// GET user registration
 	const [userRegistered, setUserRegistered] = useState(false);
 
-	const userRegistrationQuery = useQuery({
+	const userAttendingEventsQuery = useQuery({
 		queryKey: [QUERY_KEYS.LIST_USER_ATTENDING_EVENTS_IDS, userSvc.getUserData().id, eventId],
 		queryFn: () =>
 			api.user_events.list_attending_ids({
 				event_ids: [eventId],
 			}),
-		enabled: authSvc.isLoggedIn || true,
+		enabled: authSvc.isLoggedIn,
 	});
 
 	useEffect(() => {
-		if (userRegistrationQuery.isSuccess) {
-			const registeredEvents = userRegistrationQuery.data;
+		if (userAttendingEventsQuery.isSuccess) {
+			const registeredEvents = userAttendingEventsQuery.data;
 			setUserRegistered(registeredEvents.includes(eventId));
 		}
-	}, [userRegistrationQuery.isSuccess, userRegistrationQuery.data, eventId]);
+	}, [userAttendingEventsQuery.isSuccess, userAttendingEventsQuery.data, eventId]);
 
 	// POST register
 	const registerMutation = useMutation({
 		mutationFn: (eventId: string) =>
 			api.events_actions.register({
+				eventId,
+			}),
+	});
+
+	const registerAsSpeakerMutation = useMutation({
+		mutationFn: (eventId: string) =>
+			api.events_actions.register_as_speaker({
 				eventId,
 			}),
 	});
@@ -123,7 +130,6 @@ export default function EventsDetailsPage() {
 				setActiveTab(0);
 			},
 			Component: SummaryTab,
-			adminOnly: false,
 		},
 		{
 			id: 1,
@@ -132,7 +138,6 @@ export default function EventsDetailsPage() {
 				setActiveTab(1);
 			},
 			Component: AttendeesTab,
-			adminOnly: true,
 		},
 	];
 
@@ -144,10 +149,10 @@ export default function EventsDetailsPage() {
 	const [registerError, setRegisterError] = useState<string | null>(null);
 
 	async function onRegisterClick() {
-		// if (!authSvc.isLoggedIn) {
-		// 	modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
-		// 	return;
-		// }
+		if (!authSvc.isLoggedIn) {
+			modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
+			return;
+		}
 
 		setRegisterLoading(true);
 		setRegisterError(null);
@@ -157,6 +162,16 @@ export default function EventsDetailsPage() {
 			await queryClient.refetchQueries({
 				queryKey: [QUERY_KEYS.RETRIEVE_EVENT, eventId],
 			});
+
+			if (authSvc.isLoggedIn) {
+				await queryClient.refetchQueries({
+					queryKey: [
+						QUERY_KEYS.LIST_USER_ATTENDING_EVENTS_IDS,
+						userSvc.getUserData().id,
+						eventId,
+					],
+				});
+			}
 
 			await toast.success('Te has registrado al evento correctamente');
 		} catch (error: any) {
@@ -172,14 +187,57 @@ export default function EventsDetailsPage() {
 		}
 	}
 
+	// Register as speaker
+	const [registerAsSpeakerLoading, setRegisterAsSpeakerLoading] = useState(false);
+	const [registerAsSpeakerError, setRegisterAsSpeakerError] = useState<string | null>(null);
+
+	async function onRegisterAsSpeakerClick() {
+		if (!authSvc.isLoggedIn) {
+			modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
+			return;
+		}
+
+		setRegisterAsSpeakerLoading(true);
+		setRegisterAsSpeakerError(null);
+
+		try {
+			await registerAsSpeakerMutation.mutateAsync(eventId);
+			await queryClient.refetchQueries({
+				queryKey: [QUERY_KEYS.RETRIEVE_EVENT, eventId],
+			});
+
+			if (authSvc.isLoggedIn) {
+				await queryClient.refetchQueries({
+					queryKey: [
+						QUERY_KEYS.LIST_USER_ATTENDING_EVENTS_IDS,
+						userSvc.getUserData().id,
+						eventId,
+					],
+				});
+			}
+
+			await toast.success('Te has registrado como ponente al evento correctamente');
+		} catch (error: any) {
+			if (error.response?.data?.code === '400_LIMIT_REACHED') {
+				setRegisterAsSpeakerError('Límite alcanzado para este evento');
+				return;
+			} else {
+				setRegisterAsSpeakerError(error.message || 'Error registrandose al evento');
+				console.error('Error registering to event:', error);
+			}
+		} finally {
+			setRegisterAsSpeakerLoading(false);
+		}
+	}
+
 	const [unregisterLoading, setUnregisterLoading] = useState(false);
 	const [unregisterError, setUnregisterError] = useState<string | null>(null);
 
 	async function onUnregisterClick() {
-		// if (!authSvc.isLoggedIn) {
-		// 	modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
-		// 	return;
-		// }
+		if (!authSvc.isLoggedIn) {
+			modalSvc.open(APP_MODALS.LOGIN_MODAL, null);
+			return;
+		}
 
 		setUnregisterLoading(true);
 		setUnregisterError(null);
@@ -189,6 +247,16 @@ export default function EventsDetailsPage() {
 			await queryClient.refetchQueries({
 				queryKey: [QUERY_KEYS.RETRIEVE_EVENT, eventId],
 			});
+
+			if (authSvc.isLoggedIn) {
+				await queryClient.refetchQueries({
+					queryKey: [
+						QUERY_KEYS.LIST_USER_ATTENDING_EVENTS_IDS,
+						userSvc.getUserData().id,
+						eventId,
+					],
+				});
+			}
 
 			await toast.success('Has desistido del evento correctamente');
 		} catch (error: any) {
@@ -213,13 +281,9 @@ export default function EventsDetailsPage() {
 
 		try {
 			await deleteMutation.mutateAsync(eventId);
-			await queryClient.refetchQueries({
-				queryKey: [QUERY_KEYS.RETRIEVE_EVENT, eventId],
-			});
+			navigate(ROUTES.events.root);
 
 			await toast.success('Evento eliminado correctamente');
-
-			navigate(ROUTES.events.root);
 		} catch (error: any) {
 			setDeleteError(error.message || 'Error eliminando el evento');
 			console.error('Error deleting event:', error);
@@ -265,6 +329,11 @@ export default function EventsDetailsPage() {
 				registerError,
 			},
 
+			registerAsSpeaker: {
+				registerAsSpeakerLoading,
+				registerAsSpeakerError,
+			},
+
 			unregister: {
 				unregisterLoading,
 				unregisterError,
@@ -278,6 +347,7 @@ export default function EventsDetailsPage() {
 
 		fn: {
 			onRegisterClick,
+			onRegisterAsSpeakerClick,
 			onUnregisterClick,
 			onDeleteClick,
 			openContactModal,
@@ -285,7 +355,7 @@ export default function EventsDetailsPage() {
 
 		queries: {
 			eventQuery,
-			userRegistrationQuery,
+			userAttendingEventsQuery,
 		},
 
 		requests: {

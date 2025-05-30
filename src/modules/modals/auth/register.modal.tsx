@@ -101,7 +101,12 @@ export default function RegisterModal({ modalId }: ModalProps) {
 			close();
 			navigate(ROUTES.root);
 		} catch (error: any) {
-			setGlobalError(error.message);
+			if (error?.response?.data?.detail?.code === '409__AUTH__USER_EXISTS') {
+				setGlobalError('Ya existe una cuenta con este email');
+				return;
+			} else {
+				setGlobalError(error.message);
+			}
 		}
 	}
 

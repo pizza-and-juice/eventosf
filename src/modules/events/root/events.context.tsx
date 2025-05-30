@@ -4,7 +4,7 @@ import { UseQueryResult } from '@tanstack/react-query';
 
 // data-fetching
 import { ListEventsResponse } from '@modules/data-fetching/responses/events.responses';
-import { ListUserEventsIdsResponse } from '@modules/data-fetching/responses/user-events.responses';
+import { ListUserAttendingEventsIdsResponse } from '@modules/data-fetching/responses/user-events.responses';
 
 // shared
 import { SortEventsBy } from '@shared/enums/sort-events.enum';
@@ -38,7 +38,7 @@ export type EventsPageCtxType = {
 	queries: {
 		eventsQuery: UseQueryResult<ListEventsResponse, Error>;
 		searchQuery: UseQueryResult<ListEventsResponse, Error>;
-		attendingEventsQuery: UseQueryResult<ListUserEventsIdsResponse, Error>;
+		attendingEventsQuery: UseQueryResult<ListUserAttendingEventsIdsResponse, Error>;
 	};
 
 	// mutations: {

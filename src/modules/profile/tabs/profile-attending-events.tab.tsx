@@ -14,7 +14,7 @@ export default function ProfileAttendingEventsTab() {
 
 	const userEventsQuery = useQuery({
 		queryKey: [QUERY_KEYS.LIST_USER_ATTENDING_EVENTS, userId],
-		queryFn: () => api.user_events.list_attending({ limit: 10, offset: 0, userId }),
+		queryFn: () => api.user_events.list_attending({ limit: 10, offset: 0, user_id: userId }),
 	});
 
 	const { data: userEvents, isLoading: userEventsLoading, isError } = userEventsQuery;

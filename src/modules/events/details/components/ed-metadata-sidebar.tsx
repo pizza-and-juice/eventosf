@@ -36,7 +36,7 @@ export default function MetadataSidebar() {
 	const desktop = useMediaQuery('(min-width: 1024px)');
 
 	const {
-		state: { register, unregister, delete: deleteEvent, userRegistered },
+		state: { register, unregister, delete: deleteEvent, userRegistered, registerAsSpeaker },
 		queries: { eventQuery },
 		fn,
 	} = useContext(EventDetailsPageCtx);
@@ -44,6 +44,7 @@ export default function MetadataSidebar() {
 	const { registerError, registerLoading } = register;
 	const { unregisterError, unregisterLoading } = unregister;
 	const { deleteError, deleteLoading } = deleteEvent;
+	const { registerAsSpeakerLoading, registerAsSpeakerError } = registerAsSpeaker;
 
 	const { data } = eventQuery;
 
@@ -85,25 +86,45 @@ export default function MetadataSidebar() {
 							: ''
 					}
 				/> */}
-				{userRegistered ? (
-					<Button
-						className={`red small  ${unregisterLoading && 'loading'}`}
-						onClick={fn.onUnregisterClick}
-					>
-						Desistir
-					</Button>
-				) : (
-					<Button
-						className={`blue small ${registerLoading && 'loading'}`}
-						onClick={fn.onRegisterClick}
-					>
-						Registrarse
-					</Button>
+
+				{!(eventData.host.id === userSvc.getUserData().id) && (
+					<>
+						{userRegistered ? (
+							<Button
+								className={`red small  ${unregisterLoading && 'loading'}`}
+								onClick={fn.onUnregisterClick}
+							>
+								Desistir
+							</Button>
+						) : (
+							<div className="flex flex-col gap-y-2">
+								<Button
+									className={`blue small ${registerLoading && 'loading'}`}
+									onClick={fn.onRegisterClick}
+								>
+									Registrarse
+								</Button>
+
+								<Button
+									className={`blue small ${
+										registerAsSpeakerLoading && 'loading'
+									}`}
+									onClick={fn.onRegisterAsSpeakerClick}
+								>
+									Exponer
+								</Button>
+							</div>
+						)}
+					</>
 				)}
 
 				{unregisterError && <div className="text-red-500 text-sm">{unregisterError}</div>}
 
 				{registerError && <div className="text-red-500 text-sm">{registerError}</div>}
+
+				{registerAsSpeakerError && (
+					<div className="text-red-500 text-sm">{registerAsSpeakerError}</div>
+				)}
 
 				{/* <Link
 					className=" flex gap-x-2 items-center"
@@ -230,6 +251,7 @@ export default function MetadataSidebar() {
 							<span className="fa-regular fa-user"></span>
 							<span>Contactar</span>
 						</Button>
+
 						{(userSvc.getUserData().id === eventData.host.id || userSvc.isAdmin()) && (
 							<>
 								{/* <Link to={ROUTES.events.edit.replace(/:id/, eventData.id)}>
@@ -239,10 +261,10 @@ export default function MetadataSidebar() {
 								</Button>
 							</Link> */}
 
-								<Button className={`blue space-x-2 small ${false && 'loading'}`}>
+								{/* <Button className={`blue space-x-2 small ${false && 'loading'}`}>
 									<span className="fa-regular fa-check"></span>
 									<span>Completar</span>
-								</Button>
+								</Button> */}
 
 								<Button
 									className={`red space-x-2 small ${deleteLoading && 'loading'}`}
